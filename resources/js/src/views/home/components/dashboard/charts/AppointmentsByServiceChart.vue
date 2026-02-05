@@ -98,23 +98,23 @@ export default {
       };
     },
     getChartWidth(categoriesLength){
-      const windowWidth = window.innerWidth
-      let maxNumber = 0
-      if(windowWidth > 991) maxNumber = 4
-      else maxNumber = 5
+    //   const windowWidth = window.innerWidth
+    //   let maxNumber = 0
+    //   if(windowWidth > 991) maxNumber = 4
+    //   else maxNumber = 5
 
-      if(categoriesLength >= maxNumber) this.chartWidth = categoriesLength * 100
-      else this.chartWidth = '100%'
+    //   if(categoriesLength >= maxNumber) this.chartWidth = categoriesLength * 100
+    //   else this.chartWidth = '100%'
     }
   },
 }
 </script>
 
 <style>
-  .label-ellipsis {
+  /* .label-ellipsis {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     width: 100%; 
-  }
+  } */
 </style>
