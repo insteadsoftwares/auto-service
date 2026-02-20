@@ -67,7 +67,6 @@
                 <validation-provider
                   #default="{ errors }"
                   name="adresse"
-                  rules="required"
                 >
 				  <b-input-group class="custom-input">
 					<b-input-group-prepend is-text>
@@ -90,7 +89,7 @@
                 <validation-provider
                   #default="{ errors }"
                   name="numéro de téléphone"
-                  rules="required|phone"
+                  rules="phone"
                 >
 				  <b-input-group class="custom-input">
 					<b-input-group-prepend is-text>
@@ -280,8 +279,6 @@ export default {
 						last_name: payload.family_name || '',
 						email: payload.email,
 						google_id: payload.sub,
-						address: 'tunis',
-						phone_number: '99999999',
 					};
 
 					try {
@@ -290,7 +287,22 @@ export default {
 						this.$toast.success('Inscription réussie via Google')
 					} catch (err) {
 						console.error(err);
-						this.$toast.error('Impossible de se connecter via Google')
+						if (err.response && err.response.data && err.response.data.errors) {
+							const errors = err.response.data.errors;
+							if (errors.email) {
+								this.$toast.error(errors.email[0]);
+								return;
+							}
+
+							const messages = Object.values(err.response.data.errors)
+								.flat()
+								.join('\n');
+
+							this.$toast.error(messages);
+						} else {
+							this.$toast.error('Impossible de se connecter via Google');
+						}
+						// this.$toast.error(error.response.data.errors ? Object.values(error.response.data.errors).join('<br>') : 'Impossible de se connecter via Google')
 					}
 				}
 			});

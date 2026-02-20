@@ -33,6 +33,12 @@ use App\Repositories\ClientVehicle\EloquentClientVehicle;
 //Notification
 use App\Repositories\Notification\NotificationRepository;
 use App\Repositories\Notification\EloquentNotification;
+//GarageService
+use App\Repositories\GarageService\GarageServiceRepository;
+use App\Repositories\GarageService\EloquenteGarageService;
+//GarageSpecialty
+use App\Repositories\GarageSpecialty\GarageSpecialtyRepository;
+use App\Repositories\GarageSpecialty\EloquenteGarageSpecialty;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -53,6 +59,8 @@ class AppServiceProvider extends ServiceProvider
 		$this->app->singleton(AppointmentRepository::class, EloquentAppointment::class);
 		$this->app->singleton(ClientVehicleRepository::class, EloquentClientVehicle::class);
 		$this->app->singleton(NotificationRepository::class, EloquentNotification::class);
+		$this->app->singleton(GarageServiceRepository::class, EloquenteGarageService::class);
+		$this->app->singleton(GarageSpecialtyRepository::class, EloquenteGarageSpecialty::class);
     }
 
     /**

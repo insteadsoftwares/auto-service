@@ -106,14 +106,16 @@ class EloquentGarage implements GarageRepository
      */
     public function addGarageSpecialties($garage_id, $type_ids, $brand_ids, $modele_ids)
     {
+		$addedSpecialties = [];
         foreach ($modele_ids as $modele_id) {
 			$modele = VehicleModele::find($modele_id);
-			GarageSpecialty::create([
+			$specialty = GarageSpecialty::create([
 				'garage_id' => $garage_id,
 				'vehicle_type_id' => $modele->type_id,
 				'vehicle_brand_id' => $modele->brand_id,
 				'vehicle_modele_id' => $modele->id,
 			]);
+        	$addedSpecialties[] = $specialty;
 		}
 
 		foreach ($type_ids as $type_id) {
@@ -123,12 +125,13 @@ class EloquentGarage implements GarageRepository
 				->exists();
 
 			if (!$exists) {
-				GarageSpecialty::create([
+				$specialty = GarageSpecialty::create([
 					'garage_id' => $garage_id,
 					'vehicle_type_id' => $type_id,
 					'vehicle_brand_id' => null,
 					'vehicle_modele_id' => null,
 				]);
+            	$addedSpecialties[] = $specialty;
 			}
 		}
 
@@ -139,14 +142,17 @@ class EloquentGarage implements GarageRepository
 				->exists();
 
 			if (!$exists) {
-				GarageSpecialty::create([
+				$specialty = GarageSpecialty::create([
 					'garage_id' => $garage_id,
 					'vehicle_type_id' => null,
 					'vehicle_brand_id' => $brand_id,
 					'vehicle_modele_id' => null,
 				]);
+            	$addedSpecialties[] = $specialty;
 			}
 		}
+
+		return GarageSpecialty::whereIn('id', collect($addedSpecialties)->pluck('id'))->with(['vehicleType', 'vehicleBrand', 'vehicleModele'])->get();
     }
 
 	/**

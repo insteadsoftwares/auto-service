@@ -135,14 +135,17 @@ class AuthController extends Controller
 	public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'role' => 'required|string',
-            'first_name' => 'required|string|max:50',
-            'last_name' => 'required|string|max:50',
-            'address' => 'required|string|max:255',
-            'phone_number' => 'required|string|max:25',
-            'email' => 'required|email|unique:aus_users,email',
-            'password' => 'required',
-        ]);
+				'role' => 'required|string',
+				'first_name' => 'required|string|max:50',
+				'last_name' => 'required|string|max:50',
+				'email' => 'required|email|unique:aus_users,email',
+				'password' => 'required',
+			],
+			[
+				'email.unique' => 'Cet email est déjà utilisé.',
+				'email.required' => 'L’adresse email est obligatoire.',
+				'email.email' => 'L’adresse email n’est pas valide.',
+			]);
 
         if ($validator->fails()) {
             return response()->json([
@@ -187,14 +190,17 @@ class AuthController extends Controller
 	public function registerGoogle(Request $request)
 	{
 		$validator = Validator::make($request->all(), [
-            'role' => 'required|string',
-            'first_name' => 'required|string|max:50',
-            'last_name' => 'required|string|max:50',
-            'address' => 'required|string|max:255',
-            'phone_number' => 'required|string|max:25',
-            'email' => 'required|email|unique:aus_users,email',
-			'google_id' => 'required|string|unique:aus_users,google_id',
-		]);
+				'role' => 'required|string',
+				'first_name' => 'required|string|max:50',
+				'last_name' => 'required|string|max:50',
+				'email' => 'required|email|unique:aus_users,email',
+				'google_id' => 'required|string|unique:aus_users,google_id',
+			],
+			[
+				'email.unique' => 'Cet email est déjà utilisé.',
+				'email.required' => 'L’adresse email est obligatoire.',
+				'email.email' => 'L’adresse email n’est pas valide.',
+			]);
 
 		if ($validator->fails()) {
 			return response()->json([
@@ -248,7 +254,7 @@ class AuthController extends Controller
 			'google_id' => 'required|string',
 		]);
 
-		$user = User::where('google_id', $request->google_id)->first();
+		$user = User::where('google_id', $request->google_id)->with(['role'])->first();
 
 		if (!$user) {
 			return response()->json([

@@ -57,5 +57,14 @@ interface ClientVehicleRepository
      * @return ClientVehicle
      */
     public function getVehiclesByClient($client_id, $relations = []);
+	
+	/**
+     * Finds by Client and Vehicle models.
+     *
+     * @param $client_id: int
+     * @param $modele_id: int
+     * @return ClientVehicle
+     */
+    public function getByClientAndVehicleModele($client_id, $modele_id);
 
 }

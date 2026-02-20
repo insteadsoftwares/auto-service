@@ -20,7 +20,7 @@
 						<i class="las la-bell"></i>
 						<span v-if="notificationsNb > 0" class="notif-badge">{{ notificationsNb }}</span>
 						<div v-if="showNotif" class="notif-dropdown">
-							<div v-if="notifications.length">
+							<div v-if="notifications.length" :style="{ overflowY: notifications.length > 1 ? 'scroll' : 'visible', maxHeight: notifications.length > 1 ? '300px' : 'auto' }">
 								<div v-for="(notif, index) in formattedNotifications" :key="index" class="notif-item">
 									<strong>{{ notif.title }}</strong>
 									<p>{{ notif.message }}</p>
@@ -51,40 +51,60 @@ const NOTIFICATION_TRANSLATIONS = {
     title: 'Nouveau rendez-vous',
     message: (n, role) => {
 	  const date = new Intl.DateTimeFormat('fr-FR').format(new Date(n.appointment.appointment_date))
+	  const service = n.appointment.service ? n.appointment.service.name : 'Service supprimé'
       if (role === 'technician') {
-        return `Nouveau rendez-vous demandé par ${n.appointment.client.first_name} ${n.appointment.client.last_name} pour le service ${n.appointment.service.name} le ${date}.`
+		const client = n.appointment.is_client ? n.appointment.client.first_name + ' ' + n.appointment.client.last_name : n.appointment.guest_name
+        return `Nouveau rendez-vous demandé par ${client} pour le service ${service} le ${date}.`
       }
-      return `Votre demande de rendez-vous pour le service ${n.appointment.service.name} le ${date} a été envoyée.`
+      return `Votre demande de rendez-vous pour le service ${service} le ${date} a été envoyée.`
     }
   },
   'appointment confirmed': {
     title: 'Rendez-vous confirmé',
     message: (n, role) => {
 	  const date = new Intl.DateTimeFormat('fr-FR').format(new Date(n.appointment.appointment_date))
+	  const service = n.appointment.service ? n.appointment.service.name : 'Service supprimé'
       if (role === 'client') {
-        return `Votre rendez-vous pour le service ${n.appointment.service.name} le ${date} a été confirmé.`
+        return `Votre rendez-vous pour le service ${service} le ${date} a été confirmé.`
       }
-      return `Vous avez confirmé le rendez-vous de ${n.appointment.client.first_name} ${n.appointment.client.last_name} pour le ${date}.`
+	  const client = n.appointment.is_client ? n.appointment.client.first_name + ' ' + n.appointment.client.last_name : n.appointment.guest_name
+      return `Vous avez confirmé le rendez-vous de ${client} pour le ${date}.`
     }
   },
   'appointment cancelled': {
     title: 'Rendez-vous annulé',
     message: (n, role) => {
 	  const date = new Intl.DateTimeFormat('fr-FR').format(new Date(n.appointment.appointment_date))
+	  const service = n.appointment.service ? n.appointment.service.name : 'Service supprimé'
       if (role === 'client') {
-        return `Votre rendez-vous du ${date} pour le service ${n.appointment.service.name} a été annulé.`
+        return `Votre rendez-vous du ${date} pour le service ${service} a été annulé.`
       }
-      return `Le rendez-vous de ${n.appointment.client.first_name} ${n.appointment.client.last_name} prévu le ${date} a été annulé.`
+	  const client = n.appointment.is_client ? n.appointment.client.first_name + ' ' + n.appointment.client.last_name : n.appointment.guest_name
+      return `Le rendez-vous de ${client} prévu le ${date} a été annulé.`
     }
   },
   'appointment completed': {
     title: 'Rendez-vous terminé',
     message: (n, role) => {
 	  const date = new Intl.DateTimeFormat('fr-FR').format(new Date(n.appointment.appointment_date))
+	  const service = n.appointment.service ? n.appointment.service.name : 'Service supprimé'
       if (role === 'client') {
-        return `Votre rendez-vous pour le service ${n.appointment.service.name} du ${date} est terminé.`
+        return `Votre rendez-vous pour le service ${service} du ${date} est terminé.`
       }
-      return `Le rendez-vous de ${n.appointment.client.first_name} ${n.appointment.client.last_name} du ${date} a été marqué comme terminé.`
+	  const client = n.appointment.is_client ? n.appointment.client.first_name + ' ' + n.appointment.client.last_name : n.appointment.guest_name
+      return `Le rendez-vous de ${client} du ${date} a été marqué comme terminé.`
+    }
+  },
+  'appointment pending': {
+    title: 'Rendez-vous en attente',
+    message: (n, role) => {
+	  const date = new Intl.DateTimeFormat('fr-FR').format(new Date(n.appointment.appointment_date))
+	  const service = n.appointment.service ? n.appointment.service.name : 'Service supprimé'
+      if (role === 'client') {
+		return `Votre rendez-vous pour le service ${service} le ${date} est en attente de confirmation.`
+      }
+	  const client = n.appointment.is_client ? n.appointment.client.first_name + ' ' + n.appointment.client.last_name : n.appointment.guest_name
+	  return `Le rendez-vous de ${client} pour le service ${service} le ${date} est en attente de confirmation.`
     }
   }
 }
@@ -197,6 +217,9 @@ export default {
   border-radius: 6px;
   box-shadow: 0 8px 25px rgba(0,0,0,0.15);
   z-index: 1000;
+  /* height: 300px */
+  max-height: 300px;
+  overflow: hidden; 
 }
 
 .notif-item {

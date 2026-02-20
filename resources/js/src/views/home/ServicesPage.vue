@@ -22,7 +22,7 @@
 							</div>
 						</div>
 
-						<div class="helpline-section">
+						<div class="helpline-section" v-if="(isLoggedIn && userRole == 'client')">
 							<div class="helpline-content text-center">
 								<h4>Besoin d’un rendez-vous ?</h4>
 								<p>Notre équipe est prête à vous accompagner</p>
@@ -50,6 +50,7 @@ import HeaderTop from "./components/header/HeaderTop.vue"
 import HeaderInternal from "./components/header/HeaderInternal.vue"
 import BreadCrumb from "./components/BreadCrumb.vue"
 import store from '@/store'
+import { mapState } from 'vuex'
 
 export default {
   name: "ServicesPage",
@@ -64,7 +65,14 @@ export default {
 	  services: [],
     }
   },
+  computed: {
+    ...mapState('auth-module', {
+      isLoggedIn: state => !!state.currentUser,
+      userRole: state => state.currentUser.role.name,
+    }),
+  },
   mounted() {
+    this.$store.dispatch('auth-module/checkUser')
 	const savedId = localStorage.getItem("selectedServiceId");
 
 	if (savedId) {

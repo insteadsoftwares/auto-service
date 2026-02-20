@@ -7,11 +7,10 @@
 				<thead>
 					<tr>
 						<th>Client</th>
+						<th>N.téléphone</th>
 						<th>Service</th>
 						<th>Date/Heure</th>
-						<th>Type</th>
-						<th>Marque</th>
-						<th>Modèle</th>
+						<th>Véhicule</th>
 						<th>État</th>
 					</tr>
 				</thead>
@@ -22,7 +21,13 @@
 						</td>
 					</tr>
 					<tr v-else v-for="expiredAppointment in paginatedAppointments" :key="expiredAppointment.id">
-						<td>{{ expiredAppointment.client.first_name }} {{ expiredAppointment.client.last_name }}</td>
+						<td>
+							<span v-if="expiredAppointment.is_client">{{ expiredAppointment.client.first_name }} {{ expiredAppointment.client.last_name }}</span>
+							<span v-else>{{ expiredAppointment.guest_name }}</span>
+						</td>
+							<span v-if="expiredAppointment.is_client">{{ expiredAppointment.client.phone_number }}</span>
+							<span v-else>{{ expiredAppointment.guest_phone }}</span>
+						</td>
 						<td>
 							<span v-if="expiredAppointment.service">{{ expiredAppointment.service.name }}</span>
 							<span v-else>-</span>
@@ -31,7 +36,7 @@
 							{{ formatDate(expiredAppointment.appointment_date) }}<br>
 							{{ formatTime(expiredAppointment.appointment_time) }}
 						</td>
-						<td v-if="expiredAppointment.vehicle">
+						<!-- <td v-if="expiredAppointment.vehicle">
 							<span v-if="expiredAppointment.vehicle.vehicle_type">{{ expiredAppointment.vehicle.vehicle_type.type }}</span>
 							<span v-else>-</span>
 						</td>
@@ -45,24 +50,51 @@
 							<span v-if="expiredAppointment.vehicle.vehicle_modele">{{ expiredAppointment.vehicle.vehicle_modele.modele }}</span>
 							<span v-else>-</span>
 						</td>
-						<td v-else>-</td>
+						<td v-else>-</td> -->
+						
 						<td>
-							<span v-if="expiredAppointment.status != 'completed' && expiredAppointment.status != 'cancelled'">
-								<span :class="['status cursor-pointer', expiredAppointment.status]" @click="openStatusMenu(expiredAppointment)">
-									{{ formatStatus(expiredAppointment.status) }}
+							<span v-if="expiredAppointment.is_client">
+								<span v-if="expiredAppointment.vehicle">
+									<span v-if="expiredAppointment.vehicle.vehicle_type">{{ expiredAppointment.vehicle.vehicle_type.type }}</span>
+									<span v-else>-</span>
+									|
+									<span v-if="expiredAppointment.vehicle.vehicle_brand">{{ expiredAppointment.vehicle.vehicle_brand.name }}</span>
+									<span v-else>-</span>
+									|
+									<span v-if="expiredAppointment.vehicle.vehicle_modele">{{ expiredAppointment.vehicle.vehicle_modele.modele }}</span>
+									<span v-else>-</span>
 								</span>
-								<div v-if="activeAppointment === expiredAppointment.id" class="status-menu">
-									<!-- <div @click="updateAppointmentStatus('pending', expiredAppointment.id)" class="status-item"> En attente </div>
-									<div @click="updateAppointmentStatus('confirmed', expiredAppointment.id)" class="status-item"> Confirmé </div>
-									<div @click="updateAppointmentStatus('cancelled', expiredAppointment.id)" class="status-item"> Annulé </div> -->
-									<div @click="updateAppointmentStatus('completed', expiredAppointment.id)" class="status-item"> Terminé </div>
-								</div>
+								<span v-else>
+									-|-|-
+								</span>
 							</span>
 							<span v-else>
-								<span :class="['status', expiredAppointment.status]">
-									{{ formatStatus(expiredAppointment.status) }}
+								<span v-if="expiredAppointment.guest_vehicle_type">
+									{{ expiredAppointment.guest_vehicle_type.type }}
 								</span>
+								<span v-else>-</span>
+								|
+								<span v-if="expiredAppointment.guest_vehicle_brand">
+									{{ expiredAppointment.guest_vehicle_brand.name }}
+								</span>
+								<span v-else>-</span>
+								|
+								<span v-if="expiredAppointment.guest_vehicle_modele">
+									{{ expiredAppointment.guest_vehicle_modele.modele }}
+								</span>
+								<span v-else>-</span>
 							</span>
+						</td>
+						<td>
+							<span :class="['status cursor-pointer', expiredAppointment.status]" @click="openStatusMenu(expiredAppointment)">
+								{{ formatStatus(expiredAppointment.status) }}
+							</span>
+							<div v-if="activeAppointment === expiredAppointment.id" class="status-menu">
+								<div @click="updateAppointmentStatus('pending', expiredAppointment.id)" class="status-item"> En attente </div>
+								<div @click="updateAppointmentStatus('confirmed', expiredAppointment.id)" class="status-item"> Confirmé </div>
+								<div @click="updateAppointmentStatus('cancelled', expiredAppointment.id)" class="status-item"> Annulé </div>
+								<div @click="updateAppointmentStatus('completed', expiredAppointment.id)" class="status-item"> Terminé </div>
+							</div>
 						</td>
 					</tr>
 				</tbody>

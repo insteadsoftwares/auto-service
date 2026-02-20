@@ -26,7 +26,6 @@
 				<!-- Type -->
 				<validation-provider
 					name="type de véhicule"
-					rules="required"
 					v-slot="{ errors }"
 				>
 					<b-form-group label="Type de véhicule" label-class="mt-2">
@@ -47,7 +46,6 @@
 				<!-- Marque -->
 				<validation-provider
 					name="marque de véhicule"
-					rules="required"
 					v-slot="{ errors }"
 				>
 					<b-form-group label="Marque de véhicule" label-class="mt-2">
@@ -85,9 +83,7 @@
 					</b-form-group>
 				</validation-provider>
 
-				<b-button type="submit" block class="submit-btn">
-					Envoyer
-				</b-button>
+				<b-button type="submit" block class="submit-btn">Réserver</b-button>
 
         	</b-form>
       	</validation-observer>
@@ -100,6 +96,7 @@ import { required } from '@validations'
 import { BForm, BFormGroup, BFormInput, BButton, BFormInvalidFeedback, BRow, BCol } from 'bootstrap-vue'
 import vSelect from 'vue-select'
 import store from '@/store'
+import { mapState } from 'vuex'
 
 export default {
   components: {
@@ -129,7 +126,13 @@ export default {
 	  }
     }
   },
+  mounted() {
+    this.$store.dispatch('auth-module/checkUser')
+  },
   computed: {
+    ...mapState('auth-module', {
+      isLoggedIn: state => !!state.currentUser,
+    }),
     filteredModeles() {
       return this.vehicleModeles.filter(m =>
         (!this.vehicle.type_id || m.type_id === this.vehicle.type_id) &&
@@ -149,7 +152,19 @@ export default {
 		}
 	},
 	onSubmit(){
-
+		if(this.isLoggedIn){
+			store.dispatch('client-vehicle-module/clineAppointmentFromHomePage', { type_id: this.vehicle.type_id, brand_id: this.vehicle.brand_id, 
+				modele_id: this.vehicle.modele_id, service_id: this.vehicle.service_id }).then(() => {
+				const result = store.getters['client-vehicle-module/appointmentFromHomePage']
+				this.$router.push({path: '/clientSpace', query: { tab: 'addAppointment', service_id: result.service_id, vehicle_id: result.clientVehicle.id }});
+			})
+		}
+		else{
+			// const type = this.vehicleTypes.find(t => t.id === this.vehicle.type_id).type
+			// const brand = this.vehicleBrands.find(b => b.id === this.vehicle.brand_id).name
+			// const modele = this.vehicleModeles.find(m => m.id === this.vehicle.modele_id).modele
+			this.$router.push({path: '/addAppointment', query: { type_id: this.vehicle.type_id, brand_id: this.vehicle.brand_id, modele_id: this.vehicle.modele_id, service_id: this.vehicle.service_id }});
+		}
 	}
   },
   created() {

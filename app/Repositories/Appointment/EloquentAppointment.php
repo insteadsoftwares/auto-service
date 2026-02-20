@@ -25,14 +25,20 @@ class EloquentAppointment implements AppointmentRepository
      * Creates a appointment
      *
      * @param $client_id: int
-     * @param $garage_id: array
-     * @param $service_id: array
-     * @param $vehicle_id: array
+     * @param $garage_id: int
+     * @param $service_id: int
+     * @param $vehicle_id: int
      * @param $appointment_date: date
-     * @param $appointment_time: time
+     * @param $guest_name: string
+     * @param $guest_phone: string
+     * @param $guest_vehicle_type_id: int
+     * @param $guest_vehicle_brand_id: int
+     * @param $guest_vehicle_model_id: int
+     * @param $is_client: boolean
      * @return Appointment
      */
-    public function create($client_id, $garage_id, $service_id, $vehicle_id, $appointment_date, $appointment_time)
+    public function create($client_id, $garage_id, $service_id, $vehicle_id, $appointment_date, $appointment_time, $guest_name, $guest_phone, 
+		$guest_vehicle_type_id, $guest_vehicle_brand_id, $guest_vehicle_model_id, $is_client)
     {
         $createdAppointment = Appointment::create([
             'client_id' => $client_id,
@@ -42,6 +48,12 @@ class EloquentAppointment implements AppointmentRepository
             'appointment_date' => $appointment_date,
             'appointment_time' => $appointment_time,
             'status' => 'pending',
+            'guest_name' => $guest_name,
+            'guest_phone' => $guest_phone,
+            'guest_vehicle_type_id' => $guest_vehicle_type_id,
+            'guest_vehicle_brand_id' => $guest_vehicle_brand_id,
+            'guest_vehicle_model_id' => $guest_vehicle_model_id,
+            'is_client' => $is_client,
         ]);
 		$this->notificationRepo->create($createdAppointment->id, $client_id, 'new appointment', null);
 
@@ -77,6 +89,7 @@ class EloquentAppointment implements AppointmentRepository
 		if($appointment->status == 'confirmed') $title = 'appointment confirmed';
 		elseif($appointment->status == 'cancelled') $title = 'appointment cancelled';
 		elseif($appointment->status == 'completed') $title = 'appointment completed';
+		elseif($appointment->status == 'pending') $title = 'appointment pending';
 		$this->notificationRepo->create($appointment->id, $user_id, $title, null);
 
         return $appointment;
@@ -149,7 +162,7 @@ class EloquentAppointment implements AppointmentRepository
 			})
 			->orderBy('appointment_date')
 			->orderBy('appointment_time')
-			->with(['client', 'service', 'vehicle.vehicleType', 'vehicle.vehicleBrand', 'vehicle.vehicleModele'])
+			->with(['client', 'service', 'vehicle.vehicleType', 'vehicle.vehicleBrand', 'vehicle.vehicleModele', 'guestVehicleType', 'guestVehicleBrand', 'guestVehicleModele'])
 			->get();
 	}
 	
@@ -172,9 +185,9 @@ class EloquentAppointment implements AppointmentRepository
 							->where('appointment_time', '>=', $now->toTimeString());
 					});
 			})
-			->orderBy('appointment_date')
-			->orderBy('appointment_time')
-			->with(['client', 'service', 'vehicle.vehicleType', 'vehicle.vehicleBrand', 'vehicle.vehicleModele'])
+			->orderBy('appointment_date', 'desc')
+			->orderBy('appointment_time', 'desc')
+			->with(['client', 'service', 'vehicle.vehicleType', 'vehicle.vehicleBrand', 'vehicle.vehicleModele', 'guestVehicleType', 'guestVehicleBrand', 'guestVehicleModele'])
 			->get();
 	}
 

@@ -28,7 +28,7 @@ export default {
 	checkUser({ commit }) {
       const user = localStorage.getItem('currentUser')
       if (user) {
-        commit('SET_CURRENT_USER', JSON.parse(user))  // Mettre à jour l'utilisateur dans le store
+        commit('SET_CURRENT_USER', JSON.parse(user))
       }
     },
 	async loginAdmin({ commit }, loginData) {
@@ -109,6 +109,7 @@ export default {
 			const response = await axios.post("/api/loginGoogle", userData);
 			localStorage.setItem("tokenUser", response.data.token);
 			axios.defaults.headers.common["Authorization"] = `Bearer ${response.data.token}`;
+			localStorage.setItem('currentUser', JSON.stringify(response.data.user))
 			commit("SET_CURRENT_USER", response.data.user);
 			return response.data;
 		} catch (error) {

@@ -72,4 +72,23 @@ class ClientVehicleController extends Controller
         return $this->clientVehicleRepo->delete($request['id']);
     }
 
+	/**
+     * Delete Client Vehicle.
+     *
+     * @param Request $request
+     */
+    public function clineAppointmentFromHomePage(Request $request)
+    {
+		Validator::make($request->all(), [
+            'modele_id' => 'required|int',
+            'service_id' => 'required|int'
+        ])->validate();
+        $client_id = $request->user()->id;
+		$client_vehicle = $this->clientVehicleRepo->getByClientAndVehicleModele($client_id, $request['modele_id']);
+		if(!$client_vehicle) {
+			$client_vehicle = $this->clientVehicleRepo->create($client_id, $request['type_id'], $request['brand_id'], $request['modele_id'], null, null, null);
+		}
+		return (object) [ 'clientVehicle' => $client_vehicle, 'service_id' => $request['service_id']];
+    }
+
 }

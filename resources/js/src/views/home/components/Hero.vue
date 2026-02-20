@@ -1,43 +1,43 @@
 <template>
   <section class="hero-wrapper">
-	<div class="hero-fixed-form">
+	<div class="hero-fixed-form" v-if="(isLoggedIn && userRole == 'client') || !isLoggedIn">
 	  <Appointment/>
     </div>
 
 	<div class="homepage-slides owl-carousel">
 		<div class="single-slide-item">
-		<div class="overlay" />
-		<div class="hero-area-content">
-			<div class="container">
-			<!-- <div class="row justify-content-center"> -->
-			<div class="row">
-				<div class="col-lg-8 wow fadeInUp animated" data-wow-delay=".2s">
-				<div class="section-title">
-					<h1>Entretien & <br>Réparation Professionnelle</h1>
-					<p>Nos techniciens qualifiés assurent un service rapide et fiable pour maintenir votre véhicule en parfait état.</p>
-				</div>
-				<router-link class="main-btn" :to="{ name: 'ServicesPage' }">En savoir plus</router-link>
+			<div class="overlay" />
+				<div class="hero-area-content">
+					<div class="container">
+						<!-- <div class="row justify-content-center"> -->
+						<div class="row">
+							<div class="col-lg-8 wow fadeInUp animated" data-wow-delay=".2s">
+								<div class="section-title">
+									<h1>Entretien & <br>Réparation Professionnelle</h1>
+									<p>Nos techniciens qualifiés assurent un service rapide et fiable pour maintenir votre véhicule en parfait état.</p>
+								</div>
+								<!-- <router-link class="main-btn" :to="{ name: 'ServicesPage' }">En savoir plus</router-link> -->
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
-			</div>
-		</div>
-		</div>
 
 		<div class="single-slide-item hero-area-bg-2">
 		<div class="overlay" />
-		<div class="hero-area-content">
-			<div class="container">
-			<div class="row">
-				<div class="col-lg-8 wow fadeInUp animated" data-wow-delay=".2s">
-				<div class="section-title">
-					<h1>Changement de Pneus & <br>Contrôle Sécurité</h1>
-					<p>Nous remplaçons vos pneus et vérifions votre véhicule pour garantir votre sécurité sur la route.</p>
-				</div>
-				<router-link class="main-btn" :to="{ name: 'ServicesPage' }">En savoir plus</router-link>
+			<div class="hero-area-content">
+				<div class="container">
+					<div class="row">
+						<div class="col-lg-8 wow fadeInUp animated" data-wow-delay=".2s">
+							<div class="section-title">
+								<h1>Changement de Pneus & <br>Contrôle Sécurité</h1>
+								<p>Nous remplaçons vos pneus et vérifions votre véhicule pour garantir votre sécurité sur la route.</p>
+							</div>
+							<!-- <router-link class="main-btn" :to="{ name: 'ServicesPage' }">En savoir plus</router-link> -->
+						</div>
+					</div>
 				</div>
 			</div>
-			</div>
-		</div>
 		</div>
 	</div>
   </section>
@@ -46,6 +46,7 @@
 <script>
 import { onMounted } from "@vue/composition-api"
 import Appointment from "./Appointment.vue"
+import { mapState } from 'vuex'
 
 export default {
   name: "HeroCarousel",
@@ -87,6 +88,15 @@ export default {
         $(".single-slide-item a.main-btn").addClass("animated fadeInDown").css("opacity", "1")
       })
     })
+  },
+  computed: {
+    ...mapState('auth-module', {
+      isLoggedIn: state => !!state.currentUser,
+      userRole: state => state.currentUser.role.name,
+    }),
+  },
+  mounted() {
+    this.$store.dispatch('auth-module/checkUser')
   },
 }
 </script>

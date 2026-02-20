@@ -26,17 +26,24 @@ class AppointmentController extends Controller
 	public function addAppointment(Request $request)
     {
         Validator::make($request->all(), [
-            'client_id' => 'required|int',
+			'is_client' => 'required|boolean',
+			'client_id' => 'required_if:is_client,true|nullable|integer',
             'garage_id' => 'required|int',
             'service_id' => 'required|int',
-            'vehicle_id' => 'required|int',
+            'vehicle_id' => 'required_if:is_client,true|nullable|int',
             'appointment_date' => 'required|date',
             'appointment_time' => 'required|date_format:H:i',
+			'guest_name' => 'required_if:is_client,false|nullable|string',
+			'guest_phone' => 'required_if:is_client,false|nullable|string',
+			'guest_vehicle_type_id' => 'required_if:is_client,false|nullable|int',
+			'guest_vehicle_brand_id' => 'required_if:is_client,false|nullable|int',
+			'guest_vehicle_model_id' => 'required_if:is_client,false|nullable|int',
         ])->validate();
 		
-		$client_id = $request->user()->id;
-        return $this->appointmentRepo->create($client_id, $request['garage_id'], $request['service_id'], $request['vehicle_id'], 
-			$request['appointment_date'], $request['appointment_time']);
+		$client_id = $request->boolean('is_client') ? $request['client_id'] : null;
+        return $this->appointmentRepo->create($client_id, $request['garage_id'], $request['service_id'], $request['vehicle_id'], $request['appointment_date'], 
+			$request['appointment_time'], $request['guest_name'], $request['guest_phone'], $request['guest_vehicle_type_id'], $request['guest_vehicle_brand_id'], 
+			$request['guest_vehicle_model_id'], $request['is_client']);
     }
 	
 	/**
