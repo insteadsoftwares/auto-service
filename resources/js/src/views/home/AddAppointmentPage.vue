@@ -4,7 +4,11 @@
 		<HeaderTop />
 		<HeaderInternal/>
 		<BreadCrumb :currentPageTitle="'Prendre Rendez-vous'"/>
-		<AddAppointment/>
+		<div class="about-area section-padding">
+			<div class="container">
+				<AddAppointment/>
+			</div>
+		</div>
 	</div>
 </template>
 
@@ -28,3 +32,7 @@ export default {
   },
 }
 </script>
+
+<style>
+@import '../../../../../public/homePage/css/clientSpace.css';
+</style>

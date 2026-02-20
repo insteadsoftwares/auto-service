@@ -5,7 +5,7 @@ export default [
     icon: 'HomeIcon',
   },
   {
-    title: 'Admin',
+    title: 'Admins',
     route: 'AdminListPage',
     icon: 'UserIcon',
 	meta: {
@@ -13,7 +13,7 @@ export default [
 	}
   },
   {
-    title: 'Technicien',
+    title: 'Techniciens',
     route: 'TechnicianListPage',
     icon: 'UserIcon',
 	meta: {
@@ -21,7 +21,7 @@ export default [
 	}
   },
   {
-    title: 'Service',
+    title: 'Services',
     route: 'ServiceListPage',
     icon: 'SettingsIcon',
 	meta: {
@@ -29,7 +29,7 @@ export default [
 	}
   },
   {
-    title: 'Type de véhicule',
+    title: 'Types de véhicule',
     route: 'VehicleTypeListPage',
     icon: 'HardDriveIcon',
 	meta: {
@@ -37,7 +37,7 @@ export default [
 	}
   },
   {
-    title: 'Marque de véhicule',
+    title: 'Marques de véhicule',
     route: 'VehicleBrandListPage',
     icon: 'TagIcon',
 	meta: {
@@ -45,7 +45,7 @@ export default [
 	}
   },
   {
-    title: 'Modèle de véhicule',
+    title: 'Modèles de véhicule',
     route: 'VehicleModeleListPage',
     icon: 'ListIcon',
 	meta: {
@@ -53,7 +53,7 @@ export default [
 	}
   },
   {
-    title: 'Garage',
+    title: 'Garages',
     route: 'GarageListPage',
     icon: 'BoxIcon',
 	meta: {

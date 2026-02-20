@@ -3,10 +3,12 @@ import axios from 'axios'
 export default {
   namespaced: true,
   state: {
-    clientVehicles: []
+    clientVehicles: [],
+	appointmentFromHomePage: null,
   },
   getters: {
     clientVehicles: state => state.clientVehicles,
+    appointmentFromHomePage: state => state.appointmentFromHomePage,
   },
   mutations: {
     SET_VEHICLES(state, val) {
@@ -14,6 +16,9 @@ export default {
     },
     ADD_CLIENT_VEHICLE(state, val) {
       state.clientVehicles.unshift(val)
+    },
+    SET_CLIENT_APPOINTMENT_FROM_HOME_PAGE(state, val) {
+      state.appointmentFromHomePage = val
     },
   },
   actions: {
@@ -49,6 +54,15 @@ export default {
       try {
         const response = await axios.delete(`/api/deleteClientVehicle/${clientVehicleId}`, { headers: { Authorization: `Bearer ${currentUserToken}` } })
         // commit('DELETE_CLIENT_VEHICLE', response.data)
+      } finally {
+        // commit('SET_CLIENT_VEHICLE', false)
+      }
+    },
+    async clineAppointmentFromHomePage({ commit }, queryParams) {
+      const currentUserToken = localStorage.getItem('tokenUser')
+      try {
+        const response = await axios.post(`/api/clineAppointmentFromHomePage`, queryParams, { headers: { Authorization: `Bearer ${currentUserToken}` } })
+        commit('SET_CLIENT_APPOINTMENT_FROM_HOME_PAGE', response.data)
       } finally {
         // commit('SET_CLIENT_VEHICLE', false)
       }

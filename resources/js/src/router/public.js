@@ -45,61 +45,6 @@ export default [
       }
     ]
   },
-//   {
-//     path: '/garage',
-//     component: MinimalLayout,
-//     children: [
-//       {
-//         path: '',
-//         name: 'GaragePage',
-//         component: () => import('@/views/home/GaragePage.vue')
-//       }
-//     ]
-//   },
-//   {
-//     path: '/addAppointment',
-//     component: MinimalLayout,
-//     children: [
-//       {
-//         path: '',
-//         name: 'AddAppointmentPage',
-//         component: () => import('@/views/home/AddAppointmentPage.vue')
-//       }
-//     ]
-//   },
-//   {
-//     path: '/editAppointment/:id',
-//     component: MinimalLayout,
-//     children: [
-//       {
-//         path: '',
-//         name: 'EditAppointmentPage',
-//         component: () => import('@/views/home/EditAppointmentPage.vue')
-//       }
-//     ]
-//   },
-//   {
-//     path: '/appointments',
-//     component: MinimalLayout,
-//     children: [
-//       {
-//         path: '',
-//         name: 'AppointmentsPage',
-//         component: () => import('@/views/home/AppointmentsPage.vue')
-//       }
-//     ]
-//   },
-//   {
-//     path: '/vehicles',
-//     component: MinimalLayout,
-//     children: [
-//       {
-//         path: '',
-//         name: 'VehiclePage',
-//         component: () => import('@/views/home/VehiclePage.vue')
-//       }
-//     ]
-//   },
   {
     path: '/clientSpace',
     component: MinimalLayout,
@@ -119,6 +64,17 @@ export default [
         path: '',
         name: 'GarageSpacePage',
         component: () => import('@/views/home/GarageSpacePage.vue')
+      }
+    ]
+  },
+  {
+    path: '/addAppointment',
+    component: MinimalLayout,
+    children: [
+      {
+        path: '',
+        name: 'AddAppointmentPage',
+        component: () => import('@/views/home/AddAppointmentPage.vue')
       }
     ]
   },

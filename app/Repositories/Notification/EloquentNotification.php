@@ -48,20 +48,31 @@ class EloquentNotification implements NotificationRepository
      */
     public function getClientNotifications($client_id)
     {
-        return Notification::whereHas('appointment', function ($query) use ($client_id) {
+		$unreadNotifications = Notification::whereHas('appointment', function ($query) use ($client_id) {
 				$query->where('client_id', $client_id);
-			})		
-			->where('update_user_id', '!=', $client_id)	
-			->where(function($query) {
-				$query->where('created_at', '>=', Carbon::now()->subDay())
-					->orWhere(function($q) {
-						$q->where('created_at', '<', Carbon::now()->subDay())
-							->where('is_read', false);
-					});
 			})
+			->where('update_user_id', '!=', $client_id)
+			->where('is_read', false)
 			->with(['appointment.client', 'appointment.service'])
 			->orderBy('created_at', 'desc')
-			->get();
+    		->get();
+
+		if ($unreadNotifications->count() < 10) {
+			$readNotifications = Notification::whereHas('appointment', function ($query) use ($client_id) {
+					$query->where('client_id', $client_id);
+				})
+				->where('update_user_id', '!=', $client_id)
+				->where('is_read', true)
+				->with(['appointment.client', 'appointment.service'])
+				->orderBy('created_at', 'desc')
+				->take(10 - $unreadNotifications->count())
+				->get();
+
+			$notifications = $unreadNotifications->merge($readNotifications);
+		} else {
+			$notifications = $unreadNotifications;
+		}
+		return $notifications;
     }
 
     /**
@@ -72,20 +83,37 @@ class EloquentNotification implements NotificationRepository
      */
     public function getTechnicianNotifications($technician_id)
     {
-        return Notification::whereHas('appointment.garage', function ($query) use ($technician_id) {
+		$unreadNotifications = Notification::whereHas('appointment.garage', function ($query) use ($technician_id) {
 				$query->where('technician_id', $technician_id);
 			})
-			->where('update_user_id', '!=', $technician_id)	
-			->where(function($query) {
-				$query->where('created_at', '>=', Carbon::now()->subDay())
-					->orWhere(function($q) {
-						$q->where('created_at', '<', Carbon::now()->subDay())
-							->where('is_read', false);
-					});
+			->where(function($query) use ($technician_id) {
+				$query->where('update_user_id', '!=', $technician_id)
+					->orWhereNull('update_user_id');
 			})
+			->where('is_read', false)
 			->with(['appointment.garage', 'appointment.client', 'appointment.service'])
 			->orderBy('created_at', 'desc')
-			->get();
+    		->get();
+
+		if ($unreadNotifications->count() < 10) {
+			$readNotifications = Notification::whereHas('appointment.garage', function ($query) use ($technician_id) {
+					$query->where('technician_id', $technician_id);
+				})
+				->where(function($query) use ($technician_id) {
+					$query->where('update_user_id', '!=', $technician_id)
+						->orWhereNull('update_user_id');
+				})
+				->where('is_read', true)
+				->with(['appointment.garage', 'appointment.client', 'appointment.service'])
+				->orderBy('created_at', 'desc')
+				->take(10 - $unreadNotifications->count())
+				->get();
+
+			$notifications = $unreadNotifications->merge($readNotifications);
+		} else {
+			$notifications = $unreadNotifications;
+		}
+		return $notifications;
     }
 
 	/**

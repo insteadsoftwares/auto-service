@@ -9,14 +9,20 @@ interface AppointmentRepository
      * Creates a appointment
      *
      * @param $client_id: int
-     * @param $garage_id: array
-     * @param $service_id: array
-     * @param $vehicle_id: array
+     * @param $garage_id: int
+     * @param $service_id: int
+     * @param $vehicle_id: int
      * @param $appointment_date: date
-     * @param $appointment_time: time
+     * @param $guest_name: string
+     * @param $guest_phone: string
+     * @param $guest_vehicle_type_id: int
+     * @param $guest_vehicle_brand_id: int
+     * @param $guest_vehicle_model_id: int
+     * @param $is_client: boolean
      * @return Appointment
      */
-    public function create($client_id, $garage_id, $service_id, $vehicle_id, $appointment_date, $appointment_time);
+    public function create($client_id, $garage_id, $service_id, $vehicle_id, $appointment_date, $appointment_time, $guest_name, $guest_phone, 
+		$guest_vehicle_type_id, $guest_vehicle_brand_id, $guest_vehicle_model_id, $is_client);
 
 	/**
      * Finds appointment by id.

@@ -4,7 +4,7 @@
 		<validation-observer ref="observer" v-slot="{ handleSubmit }">	
 			<b-form action="index.html"  @submit.prevent="handleSubmit(onSubmit)">
 				<b-row>
-					<b-col class="col-lg-6 col-md-6 col-12">
+					<b-col class="col-lg-6 col-md-6 col-12" v-if="isLoggedIn">
 						<validation-provider
 							name="véhicule"
 							rules="required"
@@ -25,6 +25,11 @@
 							</b-form-group>
 						</validation-provider>
 					</b-col>
+					<b-col class="col-lg-6 col-md-6 col-12" v-else>
+						<b-form-group label="Véhicule">
+							<b-form-input :value="guestVehicleLabel" disabled />
+						</b-form-group>
+					</b-col>
 					<b-col class="col-lg-6 col-md-6 col-12">
 						<validation-provider
 							name="service"
@@ -39,10 +44,44 @@
 									label="name"
 									:class="{ 'is-invalid': errors.length }"
 									placeholder="Sélectionner service"
+									@input="onServiceChange"
 								/>
 								<div class="invalid-feedback d-block" v-if="errors.length">
 									{{ errors[0] }}
 								</div>
+							</b-form-group>
+						</validation-provider>
+					</b-col>
+					<b-col class="col-lg-6 col-md-6 col-12" v-if="!isLoggedIn">
+						<validation-provider name="nom" rules="required" v-slot="{ errors }">
+							<b-form-group label="Nom">
+								<b-form-input
+									v-model="appointment.guest_name"
+									:class="{ 'is-invalid': errors.length }"
+									placeholder="Votre nom"
+								/>
+								<div class="invalid-feedback d-block" v-if="errors.length">
+									{{ errors[0] }}
+								</div>
+							</b-form-group>
+						</validation-provider>
+					</b-col>
+
+					<b-col class="col-lg-6 col-md-6 col-12" v-if="!isLoggedIn">
+						<validation-provider 
+							name="numéro de téléphone" 
+							rules="required|numeric|min:8" 
+							v-slot="{ errors }"
+						>
+							<b-form-group label="Numéro de téléphone">
+								<b-form-input
+									v-model="appointment.guest_phone"
+									:class="{ 'is-invalid': errors.length }"
+									placeholder="Votre numéro"
+								/>
+							<div class="invalid-feedback d-block" v-if="errors.length">
+								{{ errors[0] }}
+							</div>
 							</b-form-group>
 						</validation-provider>
 					</b-col>
@@ -113,10 +152,12 @@
 import { BFormInput, BFormGroup, BButton, BFormInvalidFeedback, BRow, BForm, BCol } from 'bootstrap-vue'
 import store from '@/store'
 import { ValidationProvider, ValidationObserver } from 'vee-validate'
-import { required } from '@validations'
+// import { required } from '@validations'
+import { required, numeric, min } from 'vee-validate/dist/rules'
 import vSelect from 'vue-select'
 import FlatPickr from 'vue-flatpickr-component'
 import 'flatpickr/dist/flatpickr.css'
+import { mapState } from 'vuex'
 
 export default {
   components: {
@@ -145,6 +186,8 @@ export default {
 		garage_id: null,
 		appointment_date: null,
       	appointment_time: null,
+		guest_name: null,
+  		guest_phone: null,
 	  },
 	  required,
 	  garagesByService: [],
@@ -158,12 +201,25 @@ export default {
 		altFormat: 'd/m/Y',
       },
 	  hours: ["08:00","09:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00"],
+	  guestVehicle: null
     }
   },
   computed: {
+    ...mapState('auth-module', {
+      isLoggedIn: state => !!state.currentUser,
+    }),
 	yearRules() {
 		return `numeric|min_value:1900|max_value:${new Date().getFullYear()}`
 	},
+	guestVehicleLabel() {
+		if (!this.guestVehicle) return ''
+
+		const brand = this.guestVehicle.vehicle_brand?.name || '-'
+		const modele = this.guestVehicle.vehicle_modele?.modele || '-'
+		const type = this.guestVehicle.vehicle_type?.type || '-'
+
+		return `${type} | ${brand} | ${modele}`
+	}
   },
   methods: {
 	onSubmit(){
@@ -295,6 +351,7 @@ export default {
 		})
 	},
 	reserveAppointment() {
+		console.log('reserveAppointment')
 		if (!this.appointment.appointment_date || !this.appointment.appointment_time) {
 			this.$toast.error('Veuillez sélectionner la date et l’heure du rendez-vous')
 			return
@@ -302,7 +359,6 @@ export default {
 		
   		const user = JSON.parse(localStorage.getItem('currentUser'))
 		const payload = {
-			client_id: user.id,
 			service_id: this.appointment.service_id,
 			vehicle_id: this.appointment.vehicle_id,
 			garage_id: this.appointment.garage_id,
@@ -310,11 +366,28 @@ export default {
 			appointment_time: this.appointment.appointment_time,
 		}
 
+		if (this.isLoggedIn && user) {
+			payload.client_id = user.id
+			payload.is_client = true
+		} else {
+			payload.guest_name = this.appointment.guest_name
+			payload.guest_phone = this.appointment.guest_phone
+			payload.guest_vehicle_type_id = Number(this.guestVehicle.type_id)
+			payload.guest_vehicle_brand_id = Number(this.guestVehicle.brand_id)
+			payload.guest_vehicle_model_id = Number(this.guestVehicle.modele_id)
+			payload.is_client = false
+		}
+
+		console.log('payload')
+		console.log(payload)
 		this.$store.dispatch('appointment-module/addAppointment', payload)
 		.then(() => {
 			this.$toast.success('Rendez-vous réservé avec succès')
-			// this.$router.push({ name: 'AppointmentsPage' })
-			this.$emit('appointment-added')
+			if (payload.is_client) {
+				this.$emit('appointment-added')
+			} else {
+				this.$router.push({ name: 'HomePage' })
+			}
 		})
 		.catch(err => {
 			console.error(err)
@@ -346,7 +419,31 @@ export default {
 				const index = this.hours.indexOf(time);
 				if (index !== -1) this.hours.splice(index, 1);
 			});
-	}
+	},
+	onServiceChange() {
+		if (!this.showGarages) return;
+		if (!this.appointment.service_id) return;
+		this.selectedGarage = null;
+		this.appointment.garage_id = null;
+		this.appointment.appointment_date = null;
+		this.appointment.appointment_time = null;
+		this.showDate = false;
+
+		if (this.map) {
+			this.map.setZoom(7);
+			this.map.setCenter({ lat: 36.8065, lng: 10.1815 });
+		}
+
+		store.dispatch('garage-module/getGaragesByService', this.appointment.service_id)
+		.then(() => {
+				this.garagesByService = store.getters['garage-module/garageByService']
+				this.showGarages = true
+				this.$nextTick(() => {
+				this.initMap()
+				this.showGaragesOnMap()
+			})
+		})
+	},
   },
   created() {
     store.dispatch('service-module/getService').then(() => {
@@ -357,9 +454,48 @@ export default {
 		}
 	})
 	
-	this.$store.dispatch('client-vehicle-module/getClientVehicles').then(() => {
-		this.vehicles = store.getters['client-vehicle-module/clientVehicles']
-	})
+	if(this.isLoggedIn){
+		this.$store.dispatch('client-vehicle-module/getClientVehicles').then(() => {
+			this.vehicles = store.getters['client-vehicle-module/clientVehicles']
+			const vehicleIdFromRoute = this.$route.query.vehicle_id;
+			if (vehicleIdFromRoute) {
+				this.appointment.vehicle_id = Number(vehicleIdFromRoute);
+			}
+		})
+	}
+	else{
+		const { type_id, brand_id, modele_id, service_id } = this.$route.query
+
+		if (type_id && brand_id && modele_id) {
+			Promise.all([
+				store.dispatch('vehicle-type-module/getVehicleTypes'),
+				store.dispatch('vehicle-brand-module/getVehicleBrands', { active: 1 }),
+				store.dispatch('vehicle-modele-module/getVehicleModeles', { active: 1 })
+			]).then(() => {
+
+				const types = store.getters['vehicle-type-module/vehicle_types'].nodes
+				const brands = store.getters['vehicle-brand-module/vehicle_brands'].nodes
+				const modeles = store.getters['vehicle-modele-module/vehicle_modeles'].nodes
+
+				const type = types.find(t => t.id == type_id)
+				const brand = brands.find(b => b.id == brand_id)
+				const modele = modeles.find(m => m.id == modele_id)
+
+				this.guestVehicle = {
+					type_id: type_id,
+					brand_id: brand_id,
+					modele_id: modele_id,
+					vehicle_type: type,
+					vehicle_brand: brand,
+					vehicle_modele: modele
+				}
+			})
+		}
+
+		if (service_id) {
+			this.appointment.service_id = Number(service_id)
+		}
+	}
   },
 }
 </script>

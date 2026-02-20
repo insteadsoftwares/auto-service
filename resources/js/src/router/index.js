@@ -52,7 +52,7 @@ router.beforeEach((to, from, next) => {
       next() 
     }
   }
-  else if (to.name == 'AppointmentsPage' || to.name == 'AddAppointmentPage' || to.name == 'EditAppointmentPage' || to.name == 'VehiclePage') {
+  else if (to.name == 'ClientSpacePage') {
     if (!user || !tokenUser || (user.role.name !== 'client')) {
       next({ name: 'HomePage' })
     } else {

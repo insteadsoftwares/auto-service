@@ -104,4 +104,16 @@ class EloquentClientVehicle implements ClientVehicleRepository
     {
         return $this->model::where('client_id', $client_id)->with($relations)->get();
     }
+
+	/**
+     * Finds by Client and Vehicle models.
+     *
+     * @param $client_id: int
+     * @param $modele_id: int
+     * @return ClientVehicle
+     */
+    public function getByClientAndVehicleModele($client_id, $modele_id)
+    {
+        return $this->model::where('client_id', $client_id)->where('modele_id', $modele_id)->first();
+    }
 }

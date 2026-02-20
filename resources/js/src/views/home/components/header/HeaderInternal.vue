@@ -54,7 +54,7 @@
 
             <div class="col-lg-3 text-end">
               <div class="header-right-content">
-                <router-link :to="{name:'AddAppointmentPage'}" class="header-btn main-btn">Prendre RDV</router-link>
+                <router-link :to="{ name: 'ClientSpacePage', query: { tab: 'addAppointment' } }" v-if="(isLoggedIn && userRole == 'client')" class="header-btn main-btn">Prendre RDV</router-link>
               </div>
             </div>
 

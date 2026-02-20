@@ -91,7 +91,6 @@ export default {
 		this.fetchData()
 	},
 	fetchData() {
-		console.log('fetchData')
 		if(this.endDate != null && this.startDate != null){
 			store.dispatch('statistic-module/getAppointmentsEvolutionByDate', { start_date: this.startDate, end_date: this.endDate, status: this.status }).then(() => {
 				this.appointmentsEvolution = store.getters['statistic-module/appointmentsEvolution']

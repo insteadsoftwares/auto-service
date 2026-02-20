@@ -35,6 +35,7 @@ Route::get('garagesByService/{service_id}', [\App\Http\Controllers\GarageControl
 Route::get('upcomingGarageAppointments/{garage_id}', [\App\Http\Controllers\AppointmentController::class, 'getUpcomingGarageAppointments']);
 Route::post('contact', [\App\Http\Controllers\ContactController::class, 'contact']);
 Route::get('statistics', [\App\Http\Controllers\StatisticController::class, 'getStatistics']);
+Route::post('addAppointment', [\App\Http\Controllers\AppointmentController::class, 'addAppointment']);
 
 Route::middleware(['auth:sanctum', 'role:super_admin'])->group(function () {
     Route::get('admins', [\App\Http\Controllers\UserController::class, 'getAdmins']);
@@ -89,9 +90,9 @@ Route::middleware(['auth:sanctum', 'role:client'])->group(function () {
     Route::post('addClientVehicle', [\App\Http\Controllers\ClientVehicleController::class, 'addClientVehicle']);
 	Route::post('editClientVehicle', [\App\Http\Controllers\ClientVehicleController::class, 'editClientVehicle']);
 	Route::delete('deleteClientVehicle/{id}', [\App\Http\Controllers\ClientVehicleController::class, 'deleteClientVehicle']);
+	Route::post('clineAppointmentFromHomePage', [\App\Http\Controllers\ClientVehicleController::class, 'clineAppointmentFromHomePage']);
 
 	//Appointment
-	Route::post('addAppointment', [\App\Http\Controllers\AppointmentController::class, 'addAppointment']);
 	Route::post('editAppointment', [\App\Http\Controllers\AppointmentController::class, 'editAppointment']);
 	Route::post('cancelAppointment/{id}', [\App\Http\Controllers\AppointmentController::class, 'cancelAppointment']);
 	Route::get('appointmentById/{id}', [\App\Http\Controllers\AppointmentController::class, 'getAppointmentById']);
@@ -117,6 +118,14 @@ Route::middleware(['auth:sanctum', 'role:technician'])->group(function () {
 	Route::get('appointmentsEvolutionByDate', [\App\Http\Controllers\StatisticController::class, 'getAppointmentsEvolutionByDate']);
 	Route::get('appointmentsCountByService', [\App\Http\Controllers\StatisticController::class, 'getAppointmentsCountByService']);
 	Route::get('threeBestClients', [\App\Http\Controllers\StatisticController::class, 'getThreeBestClients']);
+
+	//Garage Service
+	Route::delete('deleteGarageService/{id}', [\App\Http\Controllers\GarageServiceControler::class, 'deleteGarageService']);
+	Route::post('addGarageServices', [\App\Http\Controllers\GarageServiceControler::class, 'addGarageServices']);
+
+	//Garage Specialty
+	Route::delete('deleteGarageSpecialty/{id}', [\App\Http\Controllers\GarageSpecialtyControler::class, 'deleteGarageSpecialty']);
+	Route::post('addGarageSpecialties', [\App\Http\Controllers\GarageSpecialtyControler::class, 'addGarageSpecialties']);
 });
 
 Route::middleware(['auth:sanctum', 'role:technician,client'])->group(function () {

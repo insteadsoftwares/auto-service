@@ -16,6 +16,12 @@ class Appointment extends Model
         'appointment_date',
         'appointment_time',
         'status',
+        'guest_name',
+        'guest_phone',
+        'guest_vehicle_type_id',
+        'guest_vehicle_brand_id',
+        'guest_vehicle_model_id',
+        'is_client',
     ];
 
 	protected $casts = [
@@ -26,6 +32,12 @@ class Appointment extends Model
         'appointment_date' => 'date',
         'appointment_time' => 'string',
         'status' => 'string',
+        'guest_name' => 'string',
+        'guest_phone' => 'string',
+        'guest_vehicle_type_id' => 'int',
+        'guest_vehicle_brand_id' => 'int',
+        'guest_vehicle_model_id' => 'int',
+        'is_client' => 'boolean',
     ];
 
 	public function client()
@@ -46,5 +58,20 @@ class Appointment extends Model
 	public function vehicle()
     {
         return $this->belongsTo(ClientVehicle::class, 'vehicle_id');
+    }
+
+	public function guestVehicleType()
+    {
+        return $this->belongsTo(VehicleType::class, 'guest_vehicle_type_id');
+    }
+	
+	public function guestVehicleBrand()
+    {
+        return $this->belongsTo(VehicleBrand::class, 'guest_vehicle_brand_id');
+    }
+	
+	public function guestVehicleModele()
+    {
+        return $this->belongsTo(VehicleModele::class, 'guest_vehicle_model_id');
     }
 }

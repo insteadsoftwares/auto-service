@@ -88,13 +88,13 @@
 				</div>
 				<b-collapse v-model="specialtiesIsOpen">
 					<ul>
-						<li class="highlight" v-for="garageSpecialtie in garage.garage_specialties" :key="garageSpecialtie.id">
+						<li class="highlight" v-for="garageSpecialty in garage.garage_specialties" :key="garageSpecialty.id">
 							<i class="las la-check-square"></i>
-							<span v-if="garageSpecialtie.vehicle_type">{{ garageSpecialtie.vehicle_type.type }}</span>
+							<span v-if="garageSpecialty.vehicle_type">{{ garageSpecialty.vehicle_type.type }}</span>
 							<span v-else>-</span> |
-							<span v-if="garageSpecialtie.vehicle_brand">{{ garageSpecialtie.vehicle_brand.name }}</span>
+							<span v-if="garageSpecialty.vehicle_brand">{{ garageSpecialty.vehicle_brand.name }}</span>
 							<span v-else>-</span> |
-							<span v-if="garageSpecialtie.vehicle_modele">{{ garageSpecialtie.vehicle_modele.modele }}</span>
+							<span v-if="garageSpecialty.vehicle_modele">{{ garageSpecialty.vehicle_modele.modele }}</span>
 							<span v-else>-</span>
 						</li>
 					</ul>

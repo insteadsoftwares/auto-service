@@ -17,6 +17,8 @@ import ClientVehicleModule from './modules/clientVehicle'
 import NotificationModule from './modules/notification'
 import ContactModule from './modules/contact'
 import StatisticModule from './modules/statistic'
+import GarageServiceModule from './modules/garageService'
+import GarageSpecialtyModule from './modules/garageSpecialty'
 
 Vue.use(Vuex)
 
@@ -37,6 +39,8 @@ export default new Vuex.Store({
 	'notification-module': NotificationModule,
 	'contact-module': ContactModule,
 	'statistic-module': StatisticModule,
+	'garage-service-module': GarageServiceModule,
+	'garage-specialty-module': GarageSpecialtyModule,
   },
   strict: process.env.DEV,
 })
