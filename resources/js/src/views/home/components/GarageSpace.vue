@@ -53,6 +53,16 @@
 				<div v-if="activeTab === 'appointmentHistory'">
 					<ExpiredGarageAppointments @garage="garage"/>
 				</div>
+
+				<!-- Calendar -->
+				<div v-if="activeTab === 'calendar'">
+					<Calendar :garage="garage"/>
+				</div>
+
+				<!-- Calendar -->
+				<div v-if="activeTab === 'garageSchedule'">
+					<GarageSchedule :garage="garage"/>
+				</div>
 			</main>
 		</div>
 	</div>
@@ -68,6 +78,8 @@ import GarageSpecialties from './garage/GarageSpecialties.vue'
 import UpcomingGarageAppointments from './appointment/UpcomingGarageAppointments.vue'
 import ExpiredGarageAppointments from './appointment/ExpiredGarageAppointments.vue'
 import Dashboard from './dashboard/Dashboard.vue'
+import Calendar from './appointment/Calendar.vue'
+import GarageSchedule from './garage/GarageSchedule.vue'
 
 export default {
   name: "ClientSpace",
@@ -78,6 +90,8 @@ export default {
 	UpcomingGarageAppointments,
 	ExpiredGarageAppointments,
 	Dashboard,
+	Calendar,
+	GarageSchedule,
   },
   data() {
     return {
@@ -87,7 +101,9 @@ export default {
         { key: "garage", label: "Garage" },
         { key: "garageServices", label: "Nos Services" },
         { key: "garageSpecialties", label: "Nos Spécialités" },
+        { key: "garageSchedule", label: "Nos Horaires" },
         { key: "appointment", label: "Nos Rendez-vous" },
+        { key: "calendar", label: "Calendrier" },
         { key: "appointmentHistory", label: "Historique RDV" },
       ],
       vehicleToEdit: null,

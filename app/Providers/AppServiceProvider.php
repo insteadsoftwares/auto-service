@@ -39,6 +39,15 @@ use App\Repositories\GarageService\EloquenteGarageService;
 //GarageSpecialty
 use App\Repositories\GarageSpecialty\GarageSpecialtyRepository;
 use App\Repositories\GarageSpecialty\EloquenteGarageSpecialty;
+//GarageLeave
+use App\Repositories\GarageLeave\GarageLeaveRepository;
+use App\Repositories\GarageLeave\EloquentGarageLeave;
+//GarageWorkingDays
+use App\Repositories\GarageWorkingDays\GarageWorkingDaysRepository;
+use App\Repositories\GarageWorkingDays\EloquentGarageWorkingDays;
+//GarageWorkingHours
+use App\Repositories\GarageWorkingHours\GarageWorkingHoursRepository;
+use App\Repositories\GarageWorkingHours\EloquentGarageWorkingHours;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -61,6 +70,9 @@ class AppServiceProvider extends ServiceProvider
 		$this->app->singleton(NotificationRepository::class, EloquentNotification::class);
 		$this->app->singleton(GarageServiceRepository::class, EloquenteGarageService::class);
 		$this->app->singleton(GarageSpecialtyRepository::class, EloquenteGarageSpecialty::class);
+		$this->app->singleton(GarageLeaveRepository::class, EloquentGarageLeave::class);
+		$this->app->singleton(GarageWorkingDaysRepository::class, EloquentGarageWorkingDays::class);
+		$this->app->singleton(GarageWorkingHoursRepository::class, EloquentGarageWorkingHours::class);
     }
 
     /**

@@ -375,4 +375,18 @@ class EloquentAppointment implements AppointmentRepository
 			->get();
 	}
 
+	/**
+     * Find appointments by garage, state and dates
+     *
+     * @param $garage_id: int
+     * @param $status: string
+     * @param $start_date: date
+     * @param $end_date: date
+     * @return Appointment[]
+     */
+	public function getAppointmentsNotCancelledByGarageAndBetweenTwoDates($garage_id, $start_date, $end_date)
+	{
+		return Appointment::where('garage_id', $garage_id)->where('status', '!=', 'cancelled')->whereBetween('appointment_date', [$start_date, $end_date])->get();
+	}
+
 }

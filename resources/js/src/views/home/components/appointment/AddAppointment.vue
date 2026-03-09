@@ -121,7 +121,9 @@
 			<b-row class="mt-5">
 				<b-col class="col-lg-6 col-md-6 col-12">
 					<b-form-group label="Date du rendez-vous">
-						<flat-pickr v-model="appointment.appointment_date" 
+						<flat-pickr 
+							:key="appointment.garage_id"
+							v-model="appointment.appointment_date" 
 							placeholder="Sélectionner date" 
 							:config="dateConfig" 
 							class="form-control flat-pickr" 
@@ -337,6 +339,7 @@ export default {
 	selectGarage(garage) {
 		this.selectedGarage = garage
 		this.appointment.garage_id = garage.id
+		this.setDisabledDatesAndWeekDays(garage)
 
 		if (garage.latitude && garage.longitude) {
 			this.focusGarage(garage)
@@ -351,7 +354,6 @@ export default {
 		})
 	},
 	reserveAppointment() {
-		console.log('reserveAppointment')
 		if (!this.appointment.appointment_date || !this.appointment.appointment_time) {
 			this.$toast.error('Veuillez sélectionner la date et l’heure du rendez-vous')
 			return
@@ -378,10 +380,7 @@ export default {
 			payload.is_client = false
 		}
 
-		console.log('payload')
-		console.log(payload)
-		this.$store.dispatch('appointment-module/addAppointment', payload)
-		.then(() => {
+		this.$store.dispatch('appointment-module/addAppointment', payload).then(() => {
 			this.$toast.success('Rendez-vous réservé avec succès')
 			if (payload.is_client) {
 				this.$emit('appointment-added')
@@ -394,32 +393,91 @@ export default {
 			this.$toast.error('Erreur lors de la réservation')
 		})
 	},
-	updateDisabledTimes() {
-		this.hours = ["08:00","09:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00"];
+	updateDisabledTimes(selectedDates) {
+		const date = selectedDates[0]
+		if (!date || !this.selectedGarage) return
 
-		const selectedDate = this.appointment.appointment_date;
-		const today = new Date();
-		const todayStr = today.toISOString().slice(0, 10);
-		const currentHour = today.getHours();
-		const currentMinute = today.getMinutes();
+		const day = date.getDay()
 
-		if (selectedDate === todayStr) {
-			this.hours = this.hours.filter(hour => {
-				const [h, m] = hour.split(':').map(Number);
-				if (h > currentHour) return true;
-				if (h === currentHour && m > currentMinute) return true;
-				return false;
-			});
+		const workingDay = this.selectedGarage.garage_working_days.find(
+			d => d.day_of_week === day
+		)
+
+		if (!workingDay || !workingDay.is_open) {
+			this.hours = []
+			return
 		}
 
-		this.upcomingGarageAppointments
-			.filter(a => a.appointment_date.slice(0, 10) === selectedDate)
-			.forEach(a => {
-				const time = a.appointment_time.slice(0, 5);
-				const index = this.hours.indexOf(time);
-				if (index !== -1) this.hours.splice(index, 1);
-			});
+		let generatedHours = []
+
+		workingDay.garage_working_hours.forEach(range => {
+			let start = range.start_time.slice(0,5)
+			let end = range.end_time.slice(0,5)
+
+			let [sh, sm] = start.split(':').map(Number)
+			let [eh, em] = end.split(':').map(Number)
+
+			let current = new Date()
+			current.setHours(sh, sm, 0)
+
+			let endDate = new Date()
+			endDate.setHours(eh, em, 0)
+
+			while(current < endDate){
+				const hour =
+					String(current.getHours()).padStart(2,'0') +
+					":" +
+					String(current.getMinutes()).padStart(2,'0')
+
+				generatedHours.push(hour)
+				current.setHours(current.getHours() + 1)
+			}
+		})
+
+		this.hours = generatedHours
+		this.removeBookedHours()
 	},
+	removeBookedHours() {
+		const selectedDate = this.appointment.appointment_date
+		this.upcomingGarageAppointments
+			.filter(a => a.appointment_date.slice(0,10) === selectedDate)
+			.forEach(a => {
+
+				const time = a.appointment_time.slice(0,5)
+				const index = this.hours.indexOf(time)
+
+				if(index !== -1){
+					this.hours.splice(index,1)
+				}
+
+			})
+	},
+	// updateDisabledTimes() {
+	// 	this.hours = ["08:00","09:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00"];
+
+	// 	const selectedDate = this.appointment.appointment_date;
+	// 	const today = new Date();
+	// 	const todayStr = today.toISOString().slice(0, 10);
+	// 	const currentHour = today.getHours();
+	// 	const currentMinute = today.getMinutes();
+
+	// 	if (selectedDate === todayStr) {
+	// 		this.hours = this.hours.filter(hour => {
+	// 			const [h, m] = hour.split(':').map(Number);
+	// 			if (h > currentHour) return true;
+	// 			if (h === currentHour && m > currentMinute) return true;
+	// 			return false;
+	// 		});
+	// 	}
+
+	// 	this.upcomingGarageAppointments
+	// 		.filter(a => a.appointment_date.slice(0, 10) === selectedDate)
+	// 		.forEach(a => {
+	// 			const time = a.appointment_time.slice(0, 5);
+	// 			const index = this.hours.indexOf(time);
+	// 			if (index !== -1) this.hours.splice(index, 1);
+	// 		});
+	// },
 	onServiceChange() {
 		if (!this.showGarages) return;
 		if (!this.appointment.service_id) return;
@@ -443,6 +501,39 @@ export default {
 				this.showGaragesOnMap()
 			})
 		})
+	},
+	setDisabledDatesAndWeekDays(garage) {
+		const garageLeaves = garage.garage_leaves || []
+		const garageWorkingDays = garage.garage_working_days || []
+
+		const disabledRanges = garageLeaves.map(leave => {
+			const start = leave.start_date.substring(0, 10)
+			const end = leave.end_date.substring(0, 10)
+
+			const [sy, sm, sd] = start.split('-')
+			const [ey, em, ed] = end.split('-')
+
+			return {
+				from: new Date(Number(sy), Number(sm) - 1, Number(sd)),
+				to: new Date(Number(ey), Number(em) - 1, Number(ed)),
+			}
+		})
+
+		const closedDays = garageWorkingDays
+			.filter(day => !day.is_open)
+			.map(day => day.day_of_week)
+
+		const disableWeekDays = function(date) {
+			return closedDays.includes(date.getDay())
+		}
+
+		this.dateConfig = {
+			...this.dateConfig,
+			disable: [
+				...disabledRanges,
+				disableWeekDays
+			]
+		}
 	},
   },
   created() {

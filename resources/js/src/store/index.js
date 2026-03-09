@@ -19,6 +19,8 @@ import ContactModule from './modules/contact'
 import StatisticModule from './modules/statistic'
 import GarageServiceModule from './modules/garageService'
 import GarageSpecialtyModule from './modules/garageSpecialty'
+import GarageLeaveModule from './modules/garageLeave'
+import GarageWorkingDaysModule from './modules/garageWorkingDays'
 
 Vue.use(Vuex)
 
@@ -41,6 +43,8 @@ export default new Vuex.Store({
 	'statistic-module': StatisticModule,
 	'garage-service-module': GarageServiceModule,
 	'garage-specialty-module': GarageSpecialtyModule,
+	'garage-leave-module': GarageLeaveModule,
+	'garage-working-days-module': GarageWorkingDaysModule,
   },
   strict: process.env.DEV,
 })

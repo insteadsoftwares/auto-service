@@ -66,7 +66,7 @@
 		  <!-- last name -->
           <validation-provider
             #default="validationContext"
-            name="last_name"
+            name="prénom"
             rules="required"
           >
             <b-form-group

@@ -115,7 +115,8 @@ export default {
     return {
       notifications: [],
 	  notificationsNb: null,
-	  showNotif: false
+	  showNotif: false,
+	  notifInterval: null,
     }
   },
   computed: {
@@ -148,6 +149,7 @@ export default {
   methods: {
     async logout() {
       await this.$store.dispatch('auth-module/logout')
+	  if(this.notifInterval) clearInterval(this.notifInterval)
       this.$router.push({ name: 'HomePage' }).catch(() => {})
     },
 	toggleNotif() {
@@ -161,23 +163,35 @@ export default {
 			this.notificationsNb = 0
 		}
 	},
+	fetchNotifications() {
+      	if (!this.isLoggedIn) return
+		if(this.userRole == 'client'){
+			store.dispatch('notification-module/getClientNotifications', { active: 1 }).then(() => {
+				this.notifications = store.getters['notification-module/clientNotifications']
+				this.notificationsNb = this.notifications.filter(n => !n.is_read).length
+			})
+		}
+		else{
+			store.dispatch('notification-module/getTechnicianNotifications').then(() => {
+				this.notifications = store.getters['notification-module/technicianNotifications']
+				this.notificationsNb = this.notifications.filter(n => !n.is_read).length
+			})
+		}
+    }
   },
   mounted() {
     this.$store.dispatch('auth-module/checkUser')
+	this.fetchNotifications()
+
+    this.notifInterval = setInterval(() => {
+      this.fetchNotifications()
+    }, 30 * 60 * 1000)
+  },
+  beforeUnmount() {
+    if(this.notifInterval) clearInterval(this.notifInterval)
   },
   created() {
-	if(this.userRole == 'client'){
-		store.dispatch('notification-module/getClientNotifications', { active: 1 }).then(() => {
-			this.notifications = store.getters['notification-module/clientNotifications']
-			this.notificationsNb = this.notifications.filter(n => !n.is_read).length
-		})
-	}
-	else{
-		store.dispatch('notification-module/getTechnicianNotifications').then(() => {
-			this.notifications = store.getters['notification-module/technicianNotifications']
-			this.notificationsNb = this.notifications.filter(n => !n.is_read).length
-		})
-	}
+	// this.fetchNotifications()
   },
 }
 </script>

@@ -46,21 +46,21 @@
 		<!-- DESCRIPTION -->
 		<div class="editable-field mt-3" @mouseenter="hoverDesc = true" @mouseleave="hoverDesc = false">
 			<div v-if="!editDescription" class="editable-display position-relative">
-			<p style="padding-right: 15px">{{ garage.description }}</p>
-			<i class="las la-edit edit-icon desc-icon" v-show="hoverDesc" @click="startEdit('description')" style="color: #f35c27"/>
-			</div>
-			<div v-else class="editable-edit">
-			<b-form-textarea
-				v-model="form.description"
-				rows="4"
-				@keyup.enter="saveEdit('description')"
-				@keyup.esc="cancelEdit('description')"
-				ref="descInput"
-			/>
-			<div class="button-row mt-2">
-				<b-button class="edit-btn" @click="saveEdit('description')">Modifier</b-button>
-				<b-button class="cancel-btn" @click="cancelEdit('description')">Annuler</b-button>
-			</div>
+				<p style="padding-right: 15px">{{ garage.description }}</p>
+				<i class="las la-edit edit-icon desc-icon" v-show="hoverDesc" @click="startEdit('description')" style="color: #f35c27"/>
+				</div>
+				<div v-else class="editable-edit">
+				<b-form-textarea
+					v-model="form.description"
+					rows="4"
+					@keyup.enter="saveEdit('description')"
+					@keyup.esc="cancelEdit('description')"
+					ref="descInput"
+				/>
+				<div class="button-row mt-2">
+					<b-button class="edit-btn" @click="saveEdit('description')">Modifier</b-button>
+					<b-button class="cancel-btn" @click="cancelEdit('description')">Annuler</b-button>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -72,7 +72,6 @@ import { BFormInput, BFormTextarea, BButton, BCollapse, BRow, BCol, BDropdown, B
 import store from '@/store'
 import AppTimeline from '@core/components/app-timeline/AppTimeline.vue'
 import AppTimelineItem from '@core/components/app-timeline/AppTimelineItem.vue'
-import QuestionSection from '../contact/QuestionSection.vue'
 
 export default {
   components: {
@@ -86,7 +85,6 @@ export default {
     AppTimelineItem,
 	BDropdown, 
 	BDropdownItem,
-	QuestionSection
   },
   data() {
     return {
