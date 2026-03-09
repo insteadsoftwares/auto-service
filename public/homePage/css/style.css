@@ -4198,8 +4198,8 @@ ul.port-menu.recent {
 	-webkit-line-clamp: 3;
 	-webkit-box-orient: vertical;
 	text-overflow: ellipsis;
+  	min-height: 75px;
 }
-
 
 .toggle-header {
   cursor: pointer;

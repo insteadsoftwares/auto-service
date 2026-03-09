@@ -126,6 +126,14 @@ Route::middleware(['auth:sanctum', 'role:technician'])->group(function () {
 	//Garage Specialty
 	Route::delete('deleteGarageSpecialty/{id}', [\App\Http\Controllers\GarageSpecialtyControler::class, 'deleteGarageSpecialty']);
 	Route::post('addGarageSpecialties', [\App\Http\Controllers\GarageSpecialtyControler::class, 'addGarageSpecialties']);
+
+	//Garage Leaves
+	Route::post('addGarageLeaves', [\App\Http\Controllers\GarageLeaveController::class, 'addGarageLeaves']);
+	Route::post('deleteGarageLeave', [\App\Http\Controllers\GarageLeaveController::class, 'deleteGarageLeave']);
+	Route::get('garageLeaves', [\App\Http\Controllers\GarageLeaveController::class, 'getGarageLeaves']);
+
+	//GarageWorkingDays
+	Route::post('editGarageWorkingDays', [\App\Http\Controllers\GarageWorkingDaysController::class, 'editGarageWorkingDays']);
 });
 
 Route::middleware(['auth:sanctum', 'role:technician,client'])->group(function () {

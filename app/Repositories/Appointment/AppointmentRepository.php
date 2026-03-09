@@ -166,4 +166,14 @@ interface AppointmentRepository
 	 */
 	public function getThreeBestClients($technician_id);
 
+	/**
+     * Find appointments by garage, state and dates
+     *
+     * @param $garage_id: int
+     * @param $start_date: date
+     * @param $end_date: date
+     * @return Appointment[]
+     */
+	public function getAppointmentsNotCancelledByGarageAndBetweenTwoDates($garage_id, $start_date, $end_date);
+
 }

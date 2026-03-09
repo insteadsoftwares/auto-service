@@ -44,4 +44,15 @@ class Garage extends Model
     {
         return $this->hasMany(Appointment::class, 'garage_id');
     }
+
+	public function garageLeaves()
+    {
+        return $this->hasMany(GarageLeave::class, 'garage_id');
+    }
+
+	public function garageWorkingDays()
+    {
+        return $this->hasMany(GarageWorkingDays::class, 'garage_id');
+    }
+	
 }

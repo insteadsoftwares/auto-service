@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\GarageService;
 use App\Models\VehicleModele;
 use App\Models\GarageSpecialty;
+use App\Repositories\GarageWorkingDays\GarageWorkingDaysRepository;
 
 class EloquentGarage implements GarageRepository
 {
@@ -15,10 +16,12 @@ class EloquentGarage implements GarageRepository
      * @var Garage
      */
     private $model;
+    private $garageWorkingDaysRepo;
 
-    public function __construct(Garage $model)
+    public function __construct(Garage $model, GarageWorkingDaysRepository $garageWorkingDaysRepository)
     {
         $this->model = $model;
+        $this->garageWorkingDaysRepo = $garageWorkingDaysRepository;
     }
 
 	/**
@@ -92,6 +95,7 @@ class EloquentGarage implements GarageRepository
 		}
 
 		$this->addGarageSpecialties($createdGarage->id, $type_ids, $brand_ids, $modele_ids);
+		$this->garageWorkingDaysRepo->createGarageWorkingDays($createdGarage->id);
 
         return $createdGarage;
     }
@@ -228,7 +232,8 @@ class EloquentGarage implements GarageRepository
      */
     public function getGarageByTechnician($technician_id)
     {
-        return $this->model::where('technician_id', $technician_id)->with(['garageServices.service', 'garageSpecialties.vehicleType', 'garageSpecialties.vehicleBrand', 'garageSpecialties.vehicleModele'])->first();
+        return $this->model::where('technician_id', $technician_id)->with(['garageServices.service', 'garageSpecialties.vehicleType', 'garageSpecialties.vehicleBrand', 
+			'garageSpecialties.vehicleModele', 'garageLeaves', 'garageWorkingDays.garageWorkingHours'])->first();
     }
 
 	/**
@@ -258,7 +263,7 @@ class EloquentGarage implements GarageRepository
         return $this->model::whereHas('garageServices', function ($query) use ($service_id) {
             $query->where('service_id', $service_id);
         })
-        ->get();
+        ->with(['garageLeaves', 'garageWorkingDays.garageWorkingHours'])->get();
     }
 
 	/**
