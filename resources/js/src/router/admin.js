@@ -55,6 +55,11 @@ export default [
         name: 'ReviewListPage', 
         component: () => import('@/views/admin/review/ReviewList.vue')
       },
+      {
+        path: 'appointmentList', // /admin/appointmentList
+        name: 'AppointmentListPage', 
+        component: () => import('@/views/admin/appointment/AppointmentList.vue')
+      },
     ]
   },
   {

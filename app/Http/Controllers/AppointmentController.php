@@ -173,5 +173,15 @@ class AppointmentController extends Controller
         $appointment = $this->appointmentRepo->getById($request['id']);
         if('cancelled' != $appointment->status) return $this->appointmentRepo->editStatus($appointment, 'cancelled', $request->user()->id);
     }
+	
+	/**
+     * Find all appointments.
+     *
+     * @param Request $request
+     */
+    public function getAllAppointments(Request $request)
+    {
+        return $this->appointmentRepo->searchAndPaginate($request['searchQuery'], $request['perPage'], $request['page'], $request['sortBy'], $request['sortDesc']);
+    }
 
 }

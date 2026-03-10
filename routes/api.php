@@ -85,6 +85,9 @@ Route::middleware(['auth:sanctum', 'role:admin,super_admin'])->group(function ()
 
 	// Delete Review
 	Route::delete('deleteReview/{id}', [\App\Http\Controllers\ReviewController::class, 'deleteReview']);
+
+	// Appointments
+	Route::get('getAllAppointments', [\App\Http\Controllers\AppointmentController::class, 'getAllAppointments']);
 });
 
 Route::middleware(['auth:sanctum', 'role:client'])->group(function () {

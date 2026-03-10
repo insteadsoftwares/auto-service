@@ -68,4 +68,12 @@ export default [
 		roles: ['super_admin', 'admin']
 	}
   },
+  {
+    title: 'Rendez vous',
+    route: 'AppointmentListPage',
+    icon: 'BoxIcon',
+	meta: {
+		roles: ['super_admin', 'admin']
+	}
+  },
 ]
