@@ -36,6 +36,7 @@ Route::get('upcomingGarageAppointments/{garage_id}', [\App\Http\Controllers\Appo
 Route::post('contact', [\App\Http\Controllers\ContactController::class, 'contact']);
 Route::get('statistics', [\App\Http\Controllers\StatisticController::class, 'getStatistics']);
 Route::post('addAppointment', [\App\Http\Controllers\AppointmentController::class, 'addAppointment']);
+Route::get('getReviews', [\App\Http\Controllers\ReviewController::class, 'getReviews']);
 
 Route::middleware(['auth:sanctum', 'role:super_admin'])->group(function () {
     Route::get('admins', [\App\Http\Controllers\UserController::class, 'getAdmins']);
@@ -81,7 +82,9 @@ Route::middleware(['auth:sanctum', 'role:admin,super_admin'])->group(function ()
 	Route::get('sixBestGarages', [\App\Http\Controllers\StatisticController::class, 'getSixBestGarages']);
 	Route::get('threeBestServices', [\App\Http\Controllers\StatisticController::class, 'getThreeBestServices']);
 	Route::get('appointmentsStatus', [\App\Http\Controllers\StatisticController::class, 'getAppointmentsStatus']);
-	
+
+	// Delete Review
+	Route::delete('deleteReview/{id}', [\App\Http\Controllers\ReviewController::class, 'deleteReview']);
 });
 
 Route::middleware(['auth:sanctum', 'role:client'])->group(function () {
@@ -101,6 +104,9 @@ Route::middleware(['auth:sanctum', 'role:client'])->group(function () {
 
 	//Notification
 	Route::get('clientNotifications', [\App\Http\Controllers\NotificationController::class, 'getClientNotifications']);
+
+	//Notification
+	Route::post('addReview', [\App\Http\Controllers\ReviewController::class, 'addReview']);
 });
 
 Route::middleware(['auth:sanctum', 'role:technician'])->group(function () {

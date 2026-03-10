@@ -21,6 +21,7 @@ import GarageServiceModule from './modules/garageService'
 import GarageSpecialtyModule from './modules/garageSpecialty'
 import GarageLeaveModule from './modules/garageLeave'
 import GarageWorkingDaysModule from './modules/garageWorkingDays'
+import ReviewModule from './modules/review'
 
 Vue.use(Vuex)
 
@@ -45,6 +46,7 @@ export default new Vuex.Store({
 	'garage-specialty-module': GarageSpecialtyModule,
 	'garage-leave-module': GarageLeaveModule,
 	'garage-working-days-module': GarageWorkingDaysModule,
+	'review-module': ReviewModule,
   },
   strict: process.env.DEV,
 })

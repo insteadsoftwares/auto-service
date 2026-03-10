@@ -4224,7 +4224,48 @@ ul.port-menu.recent {
 	position: relative;
 }
 
-
 #header-3{
 	top: 53.2px;
+}
+
+.modal-header .close {
+  background: #f5f5f5 !important;
+  border-radius: 50% !important;
+  padding: 6px 10px !important;
+  opacity: 1 !important;
+  border: none;
+  position: absolute;
+  top: -10px;
+  right: -10px;
+}
+
+.modal-header .close:hover {
+  background: #e5e5e5 !important;
+}
+
+#review-modal .modal-header {
+  border-bottom: none !important;
+}
+
+#review-modal .modal-footer {
+  border-top: none !important;
+}
+
+.modal-header{
+	padding: 15px 35px;
+}
+
+.modal-body{
+	padding: 20px 35px;
+}
+
+.star{
+  font-size:30px;
+  cursor:pointer;
+  color:#ccc;
+  /* margin:5px; */
+}
+
+.star.active{
+  color:#F35C27;
 }

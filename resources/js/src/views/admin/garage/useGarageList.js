@@ -66,7 +66,7 @@ export default function useGarageList() {
         toast({
           component: ToastificationContent,
           props: {
-            title: 'Erreur lors de la récupération de la liste des des marques de véhicules',
+            title: 'Erreur lors de la récupération de la liste des marques de véhicules',
             icon: 'AlertTriangleIcon',
             variant: 'danger',
           },

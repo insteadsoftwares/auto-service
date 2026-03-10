@@ -344,28 +344,3 @@ export default {
   }
 }
 </script>
-
-<style>
-/* .modal-header {
-  border-bottom: none !important;
-}
-
-.modal-footer {
-  border-top: none !important;
-} */
-
-.modal-header .close {
-  background: #f5f5f5 !important;
-  border-radius: 50% !important;
-  padding: 6px 10px !important;
-  opacity: 1 !important;
-  border: none;
-  position: absolute;
-  top: -10px;
-  right: -10px;
-}
-
-.modal-header .close:hover {
-  background: #e5e5e5 !important;
-}
-</style>

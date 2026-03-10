@@ -50,6 +50,11 @@ export default [
         name: 'GarageListPage', 
         component: () => import('@/views/admin/garage/GarageList.vue')
       },
+      {
+        path: 'reviewList', // /admin/reviewList
+        name: 'ReviewListPage', 
+        component: () => import('@/views/admin/review/ReviewList.vue')
+      },
     ]
   },
   {

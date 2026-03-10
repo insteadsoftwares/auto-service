@@ -48,6 +48,9 @@ use App\Repositories\GarageWorkingDays\EloquentGarageWorkingDays;
 //GarageWorkingHours
 use App\Repositories\GarageWorkingHours\GarageWorkingHoursRepository;
 use App\Repositories\GarageWorkingHours\EloquentGarageWorkingHours;
+//Review
+use App\Repositories\Review\ReviewRepository;
+use App\Repositories\Review\EloquentReview;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -73,6 +76,7 @@ class AppServiceProvider extends ServiceProvider
 		$this->app->singleton(GarageLeaveRepository::class, EloquentGarageLeave::class);
 		$this->app->singleton(GarageWorkingDaysRepository::class, EloquentGarageWorkingDays::class);
 		$this->app->singleton(GarageWorkingHoursRepository::class, EloquentGarageWorkingHours::class);
+		$this->app->singleton(ReviewRepository::class, EloquentReview::class);
     }
 
     /**

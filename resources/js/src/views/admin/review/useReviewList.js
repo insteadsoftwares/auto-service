@@ -3,22 +3,23 @@ import { useToast } from 'vue-toastification/composition'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 import store from '@/store'
 
-export default function useVehicleModeleList() {
+export default function useReviewList() {
   // Use toast
   const toast = useToast()
 
-  const refVehicleModeleListTable = ref(null)
+  const refReviewsListTable = ref(null)
 
   // Table Handlers
   const tableColumns = [
-    { key: 'modele', label: 'modèle', sortable: true },
-    { key: 'brand_id', label: 'Marque', sortable: true },
-    { key: 'type_id', label: 'Type', sortable: true },
-    { key: 'active', label: 'Actif', sortable: true },
+    { key: 'client_id', label: 'Client', sortable: true },
+    { key: 'garage', label: 'Garage', sortable: true },
+    { key: 'service', label: 'Service', sortable: true },
+    { key: 'rating', label: 'rating', sortable: true },
+    { key: 'comment', label: 'commentaire', sortable: true },
     { key: 'actions' },
   ]
   const perPage = ref(10)
-  const totalVehicleModeles = ref(0)
+  const totalReviews = ref(0)
   const currentPage = ref(1)
   const perPageOptions = [10, 25, 50, 100]
   const searchQuery = ref('')
@@ -26,43 +27,44 @@ export default function useVehicleModeleList() {
   const isSortDirDesc = ref(true)
 
   const dataMeta = computed(() => {
-    const localItemsCount = refVehicleModeleListTable.value ? refVehicleModeleListTable.value.localItems.length : 0
+    const localItemsCount = refReviewsListTable.value ? refReviewsListTable.value.localItems.length : 0
     return {
       from: perPage.value * (currentPage.value - 1) + (localItemsCount ? 1 : 0),
       to: perPage.value * (currentPage.value - 1) + localItemsCount,
-      of: totalVehicleModeles.value,
+      of: totalReviews.value,
     }
   })
 
   const refetchData = () => {
-    refVehicleModeleListTable.value.refresh()
+    refReviewsListTable.value.refresh()
   }
 
   watch([currentPage, perPage, searchQuery], () => {
     refetchData()
   })
 
-  // TODO: fetch Vehicle modeles
-  const fetchVehicleModeles = (ctx, callback) => {
+  // TODO: fetch review
+  const fetchReviews = (ctx, callback) => {
     store
-      .dispatch('vehicle-modele-module/getVehicleModeles', {
+      .dispatch('review-module/getReviews', {
         searchQuery: searchQuery.value,
         perPage: perPage.value,
         page: currentPage.value,
         sortBy: sortBy.value,
         sortDesc: isSortDirDesc.value,
+        active: null,
 		isClient: false, 
       })
       .then(() => {
-        const { nodes, total } = store.getters['vehicle-modele-module/vehicle_modeles']
+        const { nodes, total } = store.getters['review-module/reviews']
         callback(nodes)
-        totalVehicleModeles.value = total
+        totalReviews.value = total
       })
       .catch(e => {
         toast({
           component: ToastificationContent,
           props: {
-            title: 'Erreur lors de la récupération de la liste des Modèles de véhicules',
+            title: 'Erreur lors de la récupération de la liste des avis',
             icon: 'AlertTriangleIcon',
             variant: 'danger',
           },
@@ -71,17 +73,17 @@ export default function useVehicleModeleList() {
   }
 
   return {
-    fetchVehicleModeles,
+    fetchReviews,
     tableColumns,
     perPage,
     currentPage,
-    totalVehicleModeles,
+    totalReviews,
     dataMeta,
     perPageOptions,
     searchQuery,
     sortBy,
     isSortDirDesc,
-    refVehicleModeleListTable,
+    refReviewsListTable,
     refetchData,
   }
 }
