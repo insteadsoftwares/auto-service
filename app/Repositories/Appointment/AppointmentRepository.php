@@ -176,4 +176,16 @@ interface AppointmentRepository
      */
 	public function getAppointmentsNotCancelledByGarageAndBetweenTwoDates($garage_id, $start_date, $end_date);
 
+	/**
+     * paginates Appointments
+     *
+	 * @param $searchQuery: string
+     * @param $perPage: integer
+     * @param $page: integer
+     * @param $sortBy: string
+     * @param $sortDesc: boolean
+	 * @return Review[]
+     */
+    public function searchAndPaginate($searchQuery, $perPage, $page, $sortBy, $sortDesc);
+
 }

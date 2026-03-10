@@ -389,4 +389,73 @@ class EloquentAppointment implements AppointmentRepository
 		return Appointment::where('garage_id', $garage_id)->where('status', '!=', 'cancelled')->whereBetween('appointment_date', [$start_date, $end_date])->get();
 	}
 
+	/**
+     * paginates Appointments
+     *
+	 * @param $searchQuery: string
+     * @param $perPage: integer
+     * @param $page: integer
+     * @param $sortBy: string
+     * @param $sortDesc: boolean
+	 * @return Review[]
+     */
+    public function searchAndPaginate($searchQuery, $perPage, $page, $sortBy, $sortDesc)
+	{
+		$query = $this->model->newQuery();
+		$query->with(['client', 'service', 'garage', 'vehicle.vehicleType', 'vehicle.vehicleBrand', 'vehicle.vehicleModele', 'guestVehicleType', 'guestVehicleBrand', 'guestVehicleModele']);
+		if ($searchQuery !== '') {
+			$query->where(function($q) use ($searchQuery) {
+				$q->where('appointment_date', 'LIKE', '%' . $searchQuery . '%')
+				->orWhere('appointment_time', 'LIKE', '%' . $searchQuery . '%')
+				->orWhere('status', 'LIKE', '%' . $searchQuery . '%')
+
+				->orWhereHas('client', function ($q2) use ($searchQuery) {
+					$q2->where('first_name', 'LIKE', '%' . $searchQuery . '%')
+						->orWhere('last_name', 'LIKE', '%' . $searchQuery . '%');
+				})
+
+				->orWhereHas('service', function ($q3) use ($searchQuery) {
+					$q3->where('name', 'LIKE', '%' . $searchQuery . '%');
+				})
+
+				->orWhereHas('garage', function ($q4) use ($searchQuery) {
+					$q4->where('name', 'LIKE', '%' . $searchQuery . '%');
+				});
+
+				$q->orWhereHas('vehicle.vehicleType', function ($q5) use ($searchQuery) {
+					$q5->where('type', 'LIKE', '%' . $searchQuery . '%');
+				});
+				$q->orWhereHas('vehicle.vehicleBrand', function ($q6) use ($searchQuery) {
+					$q6->where('name', 'LIKE', '%' . $searchQuery . '%');
+				});
+				$q->orWhereHas('vehicle.vehicleModele', function ($q7) use ($searchQuery) {
+					$q7->where('modele', 'LIKE', '%' . $searchQuery . '%');
+				});
+
+				$q->orWhereHas('guestVehicleType', function ($q8) use ($searchQuery) {
+					$q8->where('type', 'LIKE', '%' . $searchQuery . '%');
+				});
+				$q->orWhereHas('guestVehicleBrand', function ($q9) use ($searchQuery) {
+					$q9->where('name', 'LIKE', '%' . $searchQuery . '%');
+				});
+				$q->orWhereHas('guestVehicleModele', function ($q10) use ($searchQuery) {
+					$q10->where('modele', 'LIKE', '%' . $searchQuery . '%');
+				});
+			});
+		}
+
+		$total = $query->count();
+		if ($sortBy !== '' && $sortBy !== null) {
+            $query->orderBy($sortBy, $sortDesc ? 'desc' : 'asc');
+        }
+        if ($page !== null && $perPage !== null) {
+            $query->skip(($page - 1) * $perPage)->take($perPage);
+        }
+
+		return (object) [
+            'nodes' => $query->get(),
+            'total' => $total,
+        ];
+	}
+
 }

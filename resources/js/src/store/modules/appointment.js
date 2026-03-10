@@ -11,6 +11,7 @@ export default {
 	upcomingGarageAppointments: [],
 	appointmentStatus: null,
 	appointmentById: null,
+	allAppointments: [],
   },
   getters: {
     appointment: state => state.appointment,
@@ -21,6 +22,7 @@ export default {
     upcomingGarageAppointments: state => state.upcomingGarageAppointments,
     appointmentStatus: state => state.appointmentStatus,
     appointmentById: state => state.appointmentById,
+    allAppointments: state => state.allAppointments,
   },
   mutations: {
     SET_APPOINTMENT(state, val) {
@@ -49,6 +51,9 @@ export default {
     },
     APPOINTMENT_BY_ID(state, val) {
       state.appointmentById = val
+    },
+    SET_ALL_APPOINTMENTS(state, val) {
+      state.allAppointments = val
     },
   },
   actions: {
@@ -138,6 +143,15 @@ export default {
       try {
         const response = await axios.post(`/api/cancelAppointment/${appointmentId}`, null,{ headers: { Authorization: `Bearer ${currentUserToken}` } })
         // commit('EDIT_APPOINTMENT_STATUS', response.data)
+      } catch (error) {
+		throw error
+	  }
+    },
+    async getAllAppointments({ commit }, queryParams) {
+      const currentUserToken = localStorage.getItem('token')
+      try {
+        const response = await axios.get('/api/getAllAppointments', { params: queryParams, headers: { Authorization: `Bearer ${currentUserToken}` } })
+        commit('SET_ALL_APPOINTMENTS', response.data)
       } catch (error) {
 		throw error
 	  }
