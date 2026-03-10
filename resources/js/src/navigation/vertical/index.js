@@ -60,4 +60,12 @@ export default [
 		roles: ['super_admin', 'admin']
 	}
   },
+  {
+    title: 'Avis',
+    route: 'ReviewListPage',
+    icon: 'BoxIcon',
+	meta: {
+		roles: ['super_admin', 'admin']
+	}
+  },
 ]

@@ -22,9 +22,9 @@ export default {
     },
   },
   actions: {
-    async getVehicleTypes({ commit }) {
+    async getVehicleTypes({ commit }, queryParams) {
       try {
-        const response = await axios.get('/api/vehicleTypes')
+        const response = await axios.get('/api/vehicleTypes', { params: queryParams})
         commit('SET_VEHICLE_TYPES', response.data)
       } catch (error) {
 		throw error

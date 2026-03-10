@@ -9,10 +9,9 @@
 						<th>Garage</th>
 						<th>Service</th>
 						<th>Date/Heure</th>
-						<th>Type</th>
-						<th>Marque</th>
-						<th>Modèle</th>
+						<th>Véhicule</th>
 						<th>État</th>
+						<th>Avis</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -34,25 +33,38 @@
 							{{ formatDate(expiredAppointment.appointment_date) }}<br>
 							{{ formatTime(expiredAppointment.appointment_time) }}
 						</td>
-						<td v-if="expiredAppointment.vehicle">
-							<span v-if="expiredAppointment.vehicle.vehicle_type">{{ expiredAppointment.vehicle.vehicle_type.type }}</span>
+						<td>
+							<span v-if="expiredAppointment.vehicle">
+								<span v-if="expiredAppointment.vehicle.vehicle_type">{{ expiredAppointment.vehicle.vehicle_type.type }}</span>
+								<span v-else>-</span>
+							</span>
+							<span v-else>-</span>
+							|
+							<span v-if="expiredAppointment.vehicle">
+								<span v-if="expiredAppointment.vehicle.vehicle_brand">{{ expiredAppointment.vehicle.vehicle_brand.name }}</span>
+								<span v-else>-</span>
+							</span>
+							<span v-else>-</span>
+							|
+							<span v-if="expiredAppointment.vehicle">
+								<span v-if="expiredAppointment.vehicle.vehicle_modele">{{ expiredAppointment.vehicle.vehicle_modele.modele }}</span>
+								<span v-else>-</span>
+							</span>
 							<span v-else>-</span>
 						</td>
-						<td v-else>-</td>
-						<td v-if="expiredAppointment.vehicle">
-							<span v-if="expiredAppointment.vehicle.vehicle_brand">{{ expiredAppointment.vehicle.vehicle_brand.name }}</span>
-							<span v-else>-</span>
-						</td>
-						<td v-else>-</td>
-						<td v-if="expiredAppointment.vehicle">
-							<span v-if="expiredAppointment.vehicle.vehicle_modele">{{ expiredAppointment.vehicle.vehicle_modele.modele }}</span>
-							<span v-else>-</span>
-						</td>
-						<td v-else>-</td>
 						<td>
 							<span :class="['status', expiredAppointment.status]">
 								{{ formatStatus(expiredAppointment.status) }}
 							</span>
+						</td>
+						<td>
+							<b-button
+								v-if="expiredAppointment.status === 'completed'"
+								class="bg-style"
+								@click="openReview(expiredAppointment.id)"
+							>
+								Avis
+							</b-button>
 						</td>
 					</tr>
 				</tbody>
@@ -88,12 +100,14 @@
 				</button>
 			</div>
 		</div>
+		<AddReview :appointmentId="selectedAppointmentId"/>
 	</div>	
 </template>
 
 <script>
-import { BRow, BCol, BDropdown, BDropdownItem, BCollapse } from 'bootstrap-vue'
+import { BRow, BCol, BDropdown, BDropdownItem, BCollapse, BButton } from 'bootstrap-vue'
 import store from '@/store'
+import AddReview from '../review/AddReview.vue'
 
 export default {
   components: {
@@ -102,12 +116,15 @@ export default {
 	BDropdown,
 	BDropdownItem,
 	BCollapse,
+	BButton,
+	AddReview,
   },
   data() {
     return {
 	  expiredAppointments: [],
 	  currentPage: 1,
       perPage: 10,
+	  selectedAppointmentId: null,
     }
   },
   computed: {
@@ -148,6 +165,10 @@ export default {
         this.currentPage--
       }
     },
+	openReview(appointment_id) {
+		this.selectedAppointmentId = appointment_id
+		this.$bvModal.show('review-modal')
+	}
   },
   created() {
     store.dispatch('appointment-module/getExpiredClientAppointments').then(() => {

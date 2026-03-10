@@ -7,6 +7,7 @@
 		<Services />
 		<Feature />
 		<Counter />  
+		<ClientsReviews />  
 		<Login />
 		<Register />
 		<ForgotPasswor />
@@ -27,6 +28,7 @@ import Login from "./components/auth/Login.vue";
 import Register from "./components/auth/Register.vue";
 import ForgotPasswor from "./components/auth/ForgotPasswor.vue";
 import ResetPassword from "./components/auth/ResetPassword.vue";
+import ClientsReviews from "./components/review/ClientsReviews.vue";
 
 
 export default {
@@ -43,6 +45,7 @@ export default {
     Register,
     ForgotPasswor,
 	ResetPassword,
+	ClientsReviews,
   },
   setup() {
     //

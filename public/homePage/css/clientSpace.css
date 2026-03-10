@@ -328,6 +328,7 @@ th, td {
 
 .bg-style{
 	background: #f35c27;
+	border-color: #f35c27;
 }
 
 #add-services-modal .v-select{

@@ -59,7 +59,7 @@ export default function useVehicleTypeList() {
         toast({
           component: ToastificationContent,
           props: {
-            title: 'Erreur lors de la récupération de la liste des des types de véhicules',
+            title: 'Erreur lors de la récupération de la liste des types de véhicules',
             icon: 'AlertTriangleIcon',
             variant: 'danger',
           },
