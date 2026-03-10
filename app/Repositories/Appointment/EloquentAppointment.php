@@ -421,6 +421,26 @@ class EloquentAppointment implements AppointmentRepository
 				->orWhereHas('garage', function ($q4) use ($searchQuery) {
 					$q4->where('name', 'LIKE', '%' . $searchQuery . '%');
 				});
+
+				$q->orWhereHas('vehicle.vehicleType', function ($q5) use ($searchQuery) {
+					$q5->where('type', 'LIKE', '%' . $searchQuery . '%');
+				});
+				$q->orWhereHas('vehicle.vehicleBrand', function ($q6) use ($searchQuery) {
+					$q6->where('name', 'LIKE', '%' . $searchQuery . '%');
+				});
+				$q->orWhereHas('vehicle.vehicleModele', function ($q7) use ($searchQuery) {
+					$q7->where('modele', 'LIKE', '%' . $searchQuery . '%');
+				});
+
+				$q->orWhereHas('guestVehicleType', function ($q8) use ($searchQuery) {
+					$q8->where('type', 'LIKE', '%' . $searchQuery . '%');
+				});
+				$q->orWhereHas('guestVehicleBrand', function ($q9) use ($searchQuery) {
+					$q9->where('name', 'LIKE', '%' . $searchQuery . '%');
+				});
+				$q->orWhereHas('guestVehicleModele', function ($q10) use ($searchQuery) {
+					$q10->where('modele', 'LIKE', '%' . $searchQuery . '%');
+				});
 			});
 		}
 
