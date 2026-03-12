@@ -25,7 +25,7 @@
 <script>
 import store from '@/store'
 import { BRow, BCol } from 'bootstrap-vue'
-import ThreeBestClientsChart from './charts/ThreeBestClientsChart.vue'
+import ThreeBestClientsChart from './charts/ThreeBestClientsChartComponent.vue'
 
 export default {
   name: "ThreeBestClients",

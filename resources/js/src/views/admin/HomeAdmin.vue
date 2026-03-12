@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import Dashboard from './dashboard/dashboard.vue'
+import Dashboard from './dashboard/Dashboard.vue'
 
 export default {
   components: {
