@@ -1,5 +1,5 @@
 <template>
-  <div class="services-area gray-bg section-padding pad-bot-90">
+  <div class="services-area gray-bg section-padding pad-bot-90" v-if="services.length > 0">
     <div class="container">
       <div class="row">
         <div class="offset-lg-2 col-lg-8 text-center">

@@ -38,25 +38,25 @@
 					rules="required"
 					v-slot="{ errors }"
 				>
-					<b-form-group label="Type de véhicule">
-					<v-select
-						v-model="vehicle.type_id"
-						:options="vehicleTypes"
-						:reduce="val => val.id"
-						label="type"
-						:class="{ 'is-invalid': errors.length }"
-						@input="onTypeOrBrandChange"
-					/>
-					<div class="invalid-feedback d-block" v-if="errors.length">
-						{{ errors[0] }}
-					</div>
+					<b-form-group label="Type de véhicule" class="mb-4">
+						<v-select
+							v-model="vehicle.type_id"
+							:options="vehicleTypes"
+							:reduce="val => val.id"
+							label="type"
+							:class="{ 'is-invalid': errors.length }"
+							@input="onTypeOrBrandChange"
+						/>
+						<div class="invalid-feedback d-block" v-if="errors.length">
+							{{ errors[0] }}
+						</div>
 					</b-form-group>
 				</validation-provider>
 			  </b-col>
 			  
 			  <b-col cols="12" md="6">
 				<!-- Marque -->
-				<b-form-group label="Marque de véhicule">
+				<b-form-group label="Marque de véhicule" class="mb-4">
 					<v-select
 						v-model="vehicle.brand_id"
 						:options="vehicleBrands"
@@ -69,7 +69,7 @@
 			  
 			  <b-col cols="12" md="6">
 				<!-- Modèle -->
-				<b-form-group label="Modèle de véhicule">
+				<b-form-group label="Modèle de véhicule" class="mb-4">
 					<v-select
 						v-model="vehicle.modele_id"
 						:options="filteredModeles"
