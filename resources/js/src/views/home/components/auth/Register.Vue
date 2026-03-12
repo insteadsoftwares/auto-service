@@ -180,6 +180,18 @@
             </b-form>
 		</validation-observer>
     </b-modal>
+
+	<b-modal id="success-modal" centered hide-footer>
+		<div class="text-center p-3">
+			<feather-icon icon="CheckCircleIcon" size="50" class="text-success mb-2"/>
+			<h3>Inscription réussie 🎉</h3>
+			<p>Votre compte a été créé avec succès</p>
+
+			<b-button variant="success" @click="$bvModal.hide('success-modal')">
+				Continuer
+			</b-button>
+		</div>
+	</b-modal>
   </div>
 </template>
 
@@ -256,8 +268,9 @@ export default {
 			const response = await this.$store.dispatch('auth-module/register', registerData)
 
 			this.$bvModal.hide('register-modal')
+			this.$bvModal.show('success-modal')
 			this.resetForm()
-			this.$toast.success('Inscription réussie')
+			// this.$toast.success('Inscription réussie')
 		} catch (error) {
 			console.error(error);
 			
@@ -329,5 +342,9 @@ export default {
 @import '../../../../../../../public/homePage/css/auth.css';
 #googleButton #button-label {
   display: none !important;
+}
+
+#success-modal .modal-header{
+	padding: 0;
 }
 </style>
