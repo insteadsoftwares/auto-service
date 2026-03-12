@@ -25,7 +25,7 @@ import Services from "./components/Services.vue"
 import Feature from "./components/Feature.vue"
 import Counter from "./components/Counter.vue"
 import Login from "./components/auth/Login.vue";
-import Register from "./components/auth/Register.vue";
+import Register from "./components/auth/AuthRegister.vue";
 import ForgotPasswor from "./components/auth/ForgotPasswor.vue";
 import ResetPassword from "./components/auth/ResetPassword.vue";
 import ClientsReviews from "./components/review/ClientsReviews.vue";
