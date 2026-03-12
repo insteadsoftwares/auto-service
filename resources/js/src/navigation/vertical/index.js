@@ -63,7 +63,7 @@ export default [
   {
     title: 'Avis',
     route: 'ReviewListPage',
-    icon: 'BoxIcon',
+    icon: 'MessageSquareIcon',
 	meta: {
 		roles: ['super_admin', 'admin']
 	}
@@ -71,7 +71,7 @@ export default [
   {
     title: 'Rendez vous',
     route: 'AppointmentListPage',
-    icon: 'BoxIcon',
+    icon: 'CalendarIcon',
 	meta: {
 		roles: ['super_admin', 'admin']
 	}

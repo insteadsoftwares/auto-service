@@ -25,7 +25,7 @@ class AddRoleAusUserTable extends Migration
                     'first_name' => 'Karim ',
                     'last_name' => 'Ben Abdelaziz',
                     'email' => 'karim.banabdelaziz@gmail.com',
-                    'password' => '$2y$10$CeAZ.Qn9L6VSwfJrCTBKCupgYSbipl471QRJYEr5qD9FszHjni4.e',
+                    'password' => '$2y$10$WRISaAP5ITqkY7eBVRgVd.E.Gm/TUyvNkcS3MxBa.YTRJugTUY7yu',
                     'phone_number' => '28172363',
                     'address' => '15, rue Amilcar, Rades',
                 ],
