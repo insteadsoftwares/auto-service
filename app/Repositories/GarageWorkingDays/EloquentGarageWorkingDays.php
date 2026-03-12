@@ -50,13 +50,19 @@ class EloquentGarageWorkingDays implements GarageWorkingDaysRepository
 	public function updateDaysAndHours($garage_id, $daysData)
     {
         foreach ($daysData as $dayData) {
+			$day = GarageWorkingDays::find($dayData['id']);
+			if (!$day) {
+				continue;
+			}
+			$day->is_open = $dayData['is_open'];
+			$day->save();
 			$this->garageWorkingHoursRepo->deleteByDay($dayData['id']);
 			foreach ($dayData['garage_working_hours'] as $hour) {
 				$this->garageWorkingHoursRepo->createGarageWorkingHours(
 					$garage_id,
 					$dayData['id'],
 					$hour['start_time'],
-					$hour['end_time']
+					$hour['end_time'],
 				);
 			}
         }
