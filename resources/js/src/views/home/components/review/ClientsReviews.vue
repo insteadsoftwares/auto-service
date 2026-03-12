@@ -1,5 +1,5 @@
 <template>
-  <div class="testimonial-area gray-bg section-padding">
+  <div class="testimonial-area gray-bg section-padding" v-if="reviews.length > 0">
     <div class="container">
       <div class="row">
         <div class="col-lg-12 text-center">
@@ -11,29 +11,11 @@
       </div>
 
       <div class="testimonial-carousel owl-carousel">
-        <!-- <div class="single-team-item" v-for="review in reviews" :key="review.id">
-          <div class="testimonial-icon"><i class="las la-quote-left"></i></div>
-          <p>{{ review.comment }}</p>
-          <div class="testimonial-author">
-            <div class="author-info">
-              <h5>{{ review.rating }}</h5>
-              <span>{{ review.comment }}</span>
-            </div>
-          </div>
-        </div>-->
 		<div class="single-team-item" v-for="review in reviews" :key="review.id">
 			<div class="testimonial-header">
 				<div class="client-info">
 					<h5>{{ review.client.first_name }} {{ review.client.last_name }}</h5>
 				</div>
-				<!-- <div class="rating">
-					<i
-						v-for="star in 5"
-						:key="star"
-						class="las"
-						:class="star <= review.rate ? 'la-star' : 'la-star-o'"
-					></i>
-				</div> -->
 				<div class="rating">
 					<span
 						v-for="star in 5"
