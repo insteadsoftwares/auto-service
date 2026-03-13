@@ -263,7 +263,7 @@ class EloquentGarage implements GarageRepository
         return $this->model::whereHas('garageServices', function ($query) use ($service_id) {
             $query->where('service_id', $service_id);
         })
-        ->with(['garageLeaves', 'garageWorkingDays.garageWorkingHours'])->get();
+        ->with(['garageLeaves', 'garageWorkingDays.garageWorkingHours', 'reviews'])->get();
     }
 
 	/**

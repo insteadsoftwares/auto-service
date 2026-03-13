@@ -1,35 +1,46 @@
 <template>
-  <div>
+  <div> 
     <h3>Horaires du garage</h3>
-    <b-table :items="workingDays" :fields="fields" small>
-      <template #cell(day_of_week)="data">
-        {{ getDayName(data.item.day_of_week) }}
-      </template>
+	<div class="table-wrapper">
+		<table>
+			<thead>
+				<tr>
+					<th>Jour</th>
+					<th>Ouvert / Fermé</th>
+					<th>Horaires</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr v-for="workingDay in workingDays" :key="workingDay.id">
+					<td>
+						{{ getDayName(workingDay.day_of_week) }}
+					</td>
+					<td>
+						<b-form-checkbox v-model="workingDay.is_open" switch>
+							{{ workingDay.is_open ? 'Ouvert' : 'Fermé' }}
+						</b-form-checkbox>
+					</td>
+					<td>
+						<div v-for="(hour, index) in workingDay.garage_working_hours" :key="index" class="d-flex align-items-center mb-1">
+							<b-form-input type="time" v-model="hour.start_time" :disabled="!workingDay.is_open" class="input-mr" @blur="validateHour(workingDay, index)"/>
+							<b-form-input type="time" v-model="hour.end_time" :disabled="!workingDay.is_open" class="input-mr" @blur="validateHour(workingDay, index)"/>
 
-      <template #cell(is_open)="data">
-        <b-form-checkbox v-model="data.item.is_open" switch>
-          {{ data.item.is_open ? 'Ouvert' : 'Fermé' }}
-        </b-form-checkbox>
-      </template>
-
-	  	<template #cell(garage_working_hours)="data">
-			<div v-for="(hour, index) in data.item.garage_working_hours" :key="index" class="d-flex align-items-center mb-1">
-				<b-form-input type="time" v-model="hour.start_time" :disabled="!data.item.is_open" class="input-mr" @blur="validateHour(data.item, index)"/>
-				<b-form-input type="time" v-model="hour.end_time" :disabled="!data.item.is_open" class="input-mr" @blur="validateHour(data.item, index)"/>
-
-				<b-button 
-					v-if="data.item.garage_working_hours.length > 1" 
-					size="sm" 
-					variant="danger" 
-					@click="removeHour(data.item, index)"
-					class="btn-delete"
-				>
-					✕
-				</b-button>
-			</div>
-			<b-button size="sm" variant="success" @click="addHour(data.item)">+ Ajouter horaire</b-button>
-		</template>
-    </b-table>
+							<b-button 
+								v-if="workingDay.garage_working_hours.length > 1" 
+								size="sm" 
+								variant="danger" 
+								@click="removeHour(workingDay, index)"
+								class="btn-delete"
+							>
+								✕
+							</b-button>
+						</div>
+						<b-button size="sm" variant="success" @click="addHour(workingDay)">+ Ajouter horaire</b-button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
 
     <b-button variant="primary" class="mt-3" @click="saveSchedule">
       Enregistrer les horaires

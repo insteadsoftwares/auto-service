@@ -55,4 +55,15 @@ class Garage extends Model
         return $this->hasMany(GarageWorkingDays::class, 'garage_id');
     }
 	
+	public function reviews()
+	{
+		return $this->hasManyThrough(
+			Review::class,
+			Appointment::class,
+			'garage_id',      
+			'appointment_id',
+			'id',
+			'id'
+		);
+	}
 }

@@ -32,6 +32,8 @@ export default {
           right: 'dayGridMonth,timeGridWeek,timeGridDay'
         },
 
+		height: 'auto',
+
         selectable: true,
 		selectMirror: true,
 		selectMinDistance: 0,
@@ -93,7 +95,16 @@ export default {
 		const end = info.end
 
 		const overlappingLeave = this.localLeaves.find(leave => {
-			return !(new Date(leave.end_date) < start || new Date(leave.start_date) > new Date(end - 1).toLocaleDateString())
+			const leaveStart = this.formatLocalDate(new Date(leave.start_date))
+			const leaveEnd = this.formatLocalDate(new Date(leave.end_date))
+
+			const selectedStart = this.formatLocalDate(info.start)
+
+			const endDate = new Date(info.end)
+			endDate.setDate(endDate.getDate() - 1)
+			const selectedEnd = this.formatLocalDate(endDate)
+
+			return !(leaveEnd < selectedStart || leaveStart > selectedEnd)
 		})
 
 		if (overlappingLeave) {
@@ -214,12 +225,14 @@ export default {
 		if (!this.garage || !Array.isArray(this.localLeaves)) return []
 		return this.localLeaves.map(leave => ({
 			id: 'leave-' + leave.id,
-			title: 'Congé',
+			// title: 'Congé',
 			start: leave.start_date,
 			end: this.addOneDay(leave.end_date),
 			display: 'background',
-			backgroundColor: '#ff0000',
-			overlap: false,
+			// backgroundColor: '#ff0000',
+			// textColor: '#ffffff',
+			// overlap: false,
+			classNames: ['leave-event'],
 			allDay: true,
 		}))
 	},
@@ -344,3 +357,47 @@ export default {
   }
 }
 </script>
+
+<style>
+@media (max-width: 768px) {
+
+  .fc-header-toolbar {
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .fc-toolbar-chunk {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .fc .fc-button {
+    font-size: 12px;
+    padding: 4px 6px;
+  }
+
+  .fc-toolbar-title {
+    font-size: 16px;
+  }
+
+}
+
+.leave-event {
+  background: rgba(220, 53, 69, 0.35) !important;
+}
+
+.fc-bg-event {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fc-bg-event::after {
+  content: "Congé";
+  color: red;
+  font-weight: bold;
+  font-size: 14px;
+}
+</style>
