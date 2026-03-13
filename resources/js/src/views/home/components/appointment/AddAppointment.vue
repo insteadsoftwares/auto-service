@@ -105,7 +105,16 @@
 								style="cursor:pointer; padding: 10px; border-bottom: 1px solid #ddd; width: 100%;"
 							>
 								<b>{{ garage.name }}</b><br>
-								{{ garage.address }}
+								{{ garage.address }}<br>
+								<div class="rating">
+									<span
+										v-for="star in 5"
+										:key="star"
+										:class="['star', getStarType(star, getGarageReviewRating(garage.reviews))]"
+									>
+										★
+									</span> ( {{ garage.reviews.length }} Avis)
+								</div>
 							</li>
 						</ul>
 					</div>
@@ -535,6 +544,25 @@ export default {
 			]
 		}
 	},
+	getGarageReviewRating(reviews){
+		if (!reviews || reviews.length === 0) {
+			return 0
+		}
+		const total = reviews.reduce((sum, review) => {
+			return sum + Number(review.rating)
+		}, 0)
+		const average = total / reviews.length
+		return Math.round(average * 10) / 10
+	},
+	getStarType(starIndex, rating) {
+		if (rating >= starIndex) {
+			return 'full'
+		} else if (rating >= starIndex - 0.5) {
+			return 'half'
+		} else {
+			return 'empty'
+		}
+	}
   },
   created() {
     store.dispatch('service-module/getService').then(() => {
@@ -627,4 +655,41 @@ export default {
     border-radius: 0;
     background: #f3f7fa !important;
 } */
+
+.rating{
+  display: flex;
+  align-items: center;
+}
+
+.rating i{
+  color:#ff0000;
+  font-size:18px;
+}
+
+.star {
+  font-size: 18px;
+  color: lightgray;
+  display: inline-block;
+  position: relative;
+  width: 18px;
+  text-align: center;
+}
+
+.star.full {
+  color: #F35C27;
+}
+
+.star.half {
+  color: lightgray;
+}
+
+.star.half::before {
+  content: '★';
+  color: #F35C27;
+  position: absolute;
+  left: 0;
+  width: 50%;
+  overflow: hidden;
+  top: 0;
+}
 </style>
