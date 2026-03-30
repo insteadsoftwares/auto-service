@@ -30,9 +30,9 @@
         <template #button-content>
           <div class="d-sm-flex d-none user-nav">
             <p class="user-name font-weight-bolder mb-0">
-              John Doe
+              {{ userName }}
             </p>
-            <span class="user-status">Admin</span>
+            <span class="user-status">{{ userRoleLabel(userRole) }}</span>
           </div>
           <b-avatar
             size="40"
@@ -100,6 +100,7 @@ import {
   BLink, BNavbarNav, BNavItemDropdown, BDropdownItem, BDropdownDivider, BAvatar,
 } from 'bootstrap-vue'
 import DarkToggler from '@core/layouts/components/app-navbar/components/DarkToggler.vue'
+import { mapState } from 'vuex'
 
 export default {
   components: {
@@ -121,9 +122,22 @@ export default {
   },
   methods: {
 	async logout() {
-		await this.$store.dispatch('auth-module/logout')
+		await this.$store.dispatch('auth-module/logoutAdmin')
 		this.$router.push({ name: 'loginAdmin' })
+	},
+	userRoleLabel() {
+		const roles = {
+			super_admin: 'Super administrateur',
+			admin: 'Administrateur',
+		}
+		return roles[this.userRole] || this.userRole
 	}
+  },
+  computed: {
+    ...mapState('auth-module', { 
+      userName: state => state.currentAdmin ? `${state.currentAdmin.first_name} ${state.currentAdmin.last_name}` : '',
+	  userRole: state => state.currentAdmin.role.name,
+    }),
   },
 }
 </script>
