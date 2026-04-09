@@ -69,6 +69,7 @@
         <!-- Column: Actions -->
         <template #cell(actions)="data">
           <feather-icon
+		   v-if="!isProtectedType(data.item)"
             :id="`vehicle-type-row-${data.item.id}-edit-icon`"
             icon="EditIcon"
             size="16"
@@ -81,6 +82,7 @@
           />
 
 		  <feather-icon
+		  	v-if="!isProtectedType(data.item)"
 			:id="`vehicle-type-row-${data.item.id}-supprimer-icon`"
 			icon="TrashIcon"
 			size="16"
@@ -252,6 +254,9 @@ export default {
 	sidebarHidden() {
       this.activeRecord = null
     },
+	isProtectedType(item) {
+		return ['Moto', 'Voiture'].includes(item.type) 
+	},
   },
 }
 </script>
