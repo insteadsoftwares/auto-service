@@ -62,12 +62,13 @@ class EloquentService implements ServiceRepository
      * @param $imageName: string
      * @return Service
      */
-    public function create($name, $description, $image, $imageName)
+    public function create($name, $description, $duration, $image, $imageName)
     {
 		$image->move(public_path('homePage/img/service'), $imageName);
         $createdService = Service::create([
             'name' => $name,
             'description' => $description,
+            'duration' => $duration,
             'image' => $imageName,
         ]);
 
@@ -94,7 +95,7 @@ class EloquentService implements ServiceRepository
      * @param $imageName: string
      * @return Service
      */
-	public function edit($service, $name, $description, $image, $imageName)
+	public function edit($service, $name, $description, $duration, $image, $imageName)
     {
 		$oldImage = $service->image;
 
@@ -108,6 +109,7 @@ class EloquentService implements ServiceRepository
 
 		$service->name = $name;
 		$service->description = $description;
+		$service->duration = $duration;
 		$service->save();
 
 		return $service;

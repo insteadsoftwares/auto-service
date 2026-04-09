@@ -36,6 +36,7 @@ export default {
 		const formData = new FormData()
 		formData.append('name', serviceData.name)
 		formData.append('description', serviceData.description)
+		formData.append('duration', serviceData.duration)
 		formData.append('image', serviceData.image)
         const response = await axios.post('/api/addService', formData, { headers: { Authorization: `Bearer ${currentUserToken}` } })
         commit('ADD_SERVICE', response.data)
@@ -50,6 +51,7 @@ export default {
 		formData.append('id', serviceData.id)
 		formData.append('name', serviceData.name)
 		formData.append('description', serviceData.description)
+		formData.append('duration', serviceData.duration)
 		if (serviceData.image) {
 			formData.append('image', serviceData.image)
 		}

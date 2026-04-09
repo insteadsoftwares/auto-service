@@ -37,7 +37,7 @@ class AppointmentController extends Controller
 			'guest_phone' => 'required_if:is_client,false|nullable|string',
 			'guest_vehicle_type_id' => 'required_if:is_client,false|nullable|int',
 			'guest_vehicle_brand_id' => 'required_if:is_client,false|nullable|int',
-			'guest_vehicle_model_id' => 'required_if:is_client,false|nullable|int',
+			'guest_vehicle_model_id' => 'nullable|int',
         ])->validate();
 		
 		$client_id = $request->boolean('is_client') ? $request['client_id'] : null;

@@ -89,6 +89,31 @@
             </b-form-group>
           </validation-provider>
 
+          <!-- duration -->
+          <validation-provider
+            #default="validationContext"
+            name="duration"
+            rules="required|numeric|min_value:1"
+          >
+            <b-form-group
+              label="Durée (min)"
+              label-for="duration"
+            >
+              <b-form-input
+                id="duration"
+                v-model="serviceData.duration"
+                :state="getValidationState(validationContext)"
+                autofocus
+				type="number"
+                trim
+              />
+
+              <b-form-invalid-feedback>
+                {{ validationContext.errors[0] }}
+              </b-form-invalid-feedback>
+            </b-form-group>
+          </validation-provider>
+
 		  <!-- image -->
           <validation-provider
             #default="validationContext"
@@ -204,6 +229,7 @@ export default {
 		  id: value.id, 
           name: value.name,
 		  description: value.description,
+		  duration: value.duration,
 		  image: null,
 		  currentImage: value.image,
         }
@@ -215,6 +241,7 @@ export default {
     const blankServiceData = {
       name: '',
       description: '',
+      duration: '',
       image: null,
       currentImage: '',
     }

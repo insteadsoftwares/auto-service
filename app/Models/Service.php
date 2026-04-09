@@ -15,12 +15,14 @@ class Service extends Model
         'name',
         'description',
         'image',
+        'duration',
     ];
 
 	protected $casts = [
         'name' => 'string',
         'description' => 'string',
         'image' => 'string',
+        'duration' => 'int',
     ];
 
 	public function appointments()

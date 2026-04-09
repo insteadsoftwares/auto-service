@@ -38,13 +38,14 @@ class ServiceController extends Controller
 		Validator::make($request->all(), [
             'name' => 'required|string',
             'description' => 'required|string',
+            'duration' => 'required',
 			'image' => 'required|image|mimes:jpg,png,jpeg|max:2048',
         ])->validate();
 		
 
 		$image = $request->file('image');
 		$imageName = $image->getClientOriginalName();
-		$service = $this->serviceRepo->create($request['name'], $request['description'], $image, $imageName);
+		$service = $this->serviceRepo->create($request['name'], $request['description'], $request['duration'], $image, $imageName);
 
         return response()->json([
             'success' => true,
@@ -64,13 +65,14 @@ class ServiceController extends Controller
 		Validator::make($request->all(), [
             'name' => 'required|string',
             'description' => 'required|string',
+            'duration' => 'required',
 			'image' => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
         ])->validate();
 		
 
 		$image = $request->file('image');
 		$imageName = $image ? $image->getClientOriginalName() : $service->image;
-		$service = $this->serviceRepo->edit($service, $request['name'], $request['description'], $image, $imageName);
+		$service = $this->serviceRepo->edit($service, $request['name'], $request['description'], $request['duration'], $image, $imageName);
 
         return response()->json([
             'success' => true,

@@ -66,7 +66,11 @@
         empty-text="Aucun enregistrement correspondant trouvé"
         :sort-desc.sync="isSortDirDesc"
       >
-        <!-- Column: Actions -->
+        <!-- Column: Duration -->
+        <template #cell(duration)="data">
+			{{ formatDuration(data.item.duration) }}
+        </template>
+
         <template #cell(actions)="data">
           <feather-icon
             :id="`service-row-${data.item.id}-edit-icon`"
@@ -250,7 +254,17 @@ export default {
     },
     sidebarHidden() {
       this.activeRecord = null
-    }
+    },
+	formatDuration(minutes) {
+		if (!minutes) return '';
+		const h = Math.floor(minutes / 60);
+		const m = minutes % 60;
+
+		let result = '';
+		if (h > 0) result += h + ' h';
+		if (m > 0) result += (h > 0 ? ' ' : '') + m + ' min';
+		return result;
+	}
   }, 
 }
 </script>

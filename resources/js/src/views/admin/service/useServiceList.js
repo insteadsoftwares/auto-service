@@ -13,6 +13,7 @@ export default function useServiceList() {
   const tableColumns = [
     { key: 'name', label: 'Service', sortable: true },
     { key: 'description', label: 'Description ', sortable: true },
+    { key: 'duration', label: 'Durée ', sortable: true },
     { key: 'image', label: 'Image', sortable: true },
     { key: 'actions' },
   ]
