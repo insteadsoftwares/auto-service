@@ -22,11 +22,12 @@ interface ServiceRepository
      *
      * @param $name: string
      * @param $description: string
+     * @param $duration: int
      * @param $image: string
      * @param $imageName: string
      * @return Service
      */
-    public function create($name, $description, $image, $imageName);
+    public function create($name, $description, $duration, $image, $imageName);
 
     /**
      * Finds service by id.
@@ -41,11 +42,12 @@ interface ServiceRepository
      * @param $service: service
      * @param $name: string
      * @param $description: string
+     * @param $duration: int
      * @param $image: string
      * @param $imageName: string
      * @return Service
      */
-	public function edit($service, $name, $description, $image, $imageName);
+	public function edit($service, $name, $description, $duration, $image, $imageName);
 
     /**
      * Deletes service
