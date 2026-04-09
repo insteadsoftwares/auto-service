@@ -412,7 +412,29 @@ export default {
 		})
 
 		this.hours = generatedHours
-		this.removeBookedHours()
+		// this.removeBookedHours()
+
+		const today = new Date()
+		const selected = new Date(date)
+
+		const isToday =
+		today.getFullYear() === selected.getFullYear() &&
+		today.getMonth() === selected.getMonth() &&
+		today.getDate() === selected.getDate()
+
+		if (isToday) {
+			const currentHour = today.getHours()
+			const currentMinutes = today.getMinutes()
+
+			this.hours = this.hours.filter(time => {
+				const [h, m] = time.split(':').map(Number)
+
+				if (h > currentHour) return true
+				if (h === currentHour && m > currentMinutes) return true
+
+				return false
+			})
+		}
 	},
 	removeBookedHours() {
 		const selectedDate = this.appointment.appointment_date
